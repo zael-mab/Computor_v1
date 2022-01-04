@@ -7,23 +7,23 @@
 // set a structure
 
 //    /^X[\^]?[0-2]{1}$|^X$/
-//    X[\^]?[0-2]{0,}
+//    /X[\^]?[0-2]{0,}/
 
 
 const struct = {
     firstArray:{
         degree: 0,
         arr:'',
-        x0:'',
-        x1:'',
-        x2:''
+        x0:[],
+        x1:[],
+        x2:[]
     },
     secondArray:{
         degree: 0,
         arr: '',
-        x0:'',
-        x1:'',
-        x2:''
+        x0:[],
+        x1:[],
+        x2:[]
     }
 };
 
@@ -32,6 +32,9 @@ const struct = {
 var arr = [];
 if (process.argv.length > 3){
     console.log (`Error to many args...`);
+    process.exit(1);
+}else if (process.argv.length == 2){
+    console.log ('Error, please add an argument');
     process.exit(1);
 }
 
@@ -54,77 +57,29 @@ if (f.length == 2){
 }
 
 console.log (struct);
+/////////////////// match
+
+const regex1 = /X[\^]?[0-2]{0,}/gi;
+const regex2 = /^X[\^][0-2]{1}$|^X$/i;
+const regex3 = /^[^a-wy-z<>%@#&!_]+$/ig;
 
 
-/////////////semplify and set Data
-const setData = (str)=>{
-    let j = 0;
-    const reg = /X$|X\^[0-2]$/;
-    for (let i = 0; i <= str.arr.length; i++){
-
-        if (str.arr[i] === 'X' && str.arr[i + 1] === '^'){
-            // 
-            if (str.arr[i + 2] > '2'){
-                console.log ('Error');
-                process.exit(1);
-            }
-            // 
-            if (str.arr[i + 2] === '0'){
-                str.arr = str.arr.replace('X^0', 1);
-            }
-            //
-            if (str.arr[i + 2] === '1'){
-                str.arr = str.arr.replace('X^1', 'X');
-            }
-        }
-// /////////////
-        if (str.arr[i] === 'X' && str.arr[i + 1] !== '^' && Number.isInteger(parseInt(str.arr[i + 1]))){
-            console.log(`Error ^ is missing between ${str.arr[i]} ${str.arr[i + 1]}`);
-            break;
-        }
-// ///////////
-        // if (){
-
-        // }
-// ////////////
-        if (str.arr[i] === '+' || str.arr[i] === '-' || i  === str.arr.length){
-
-            if (i == 0)
-                continue;
-            const tmp = str.arr.slice(j, i);
-            let d = degree(tmp);
-            if (d == 0){
-                str.x0 = tmp.slice();
-            }else if (d == 1){
-                str.x1 = tmp.slice();
-            }else if (d == 2){
-                str.x2 = tmp.slice();
-            }
-            str.degree = d > str.degree ? d : str.degree;
-            
-            console.log(tmp,'|', i, j, `D = ${d}`);
-            j = i;
-        }
-        // 
-    }
-    return str;
+if (arr[0].match(regex3) === null){
+    console.log (`Syntax Error`);
+    process.exit (1);
 }
 
-// ////////////////////////
-const degree = (str) => {
-    for(let i = 0; i < str.length; i++){
-        if (str[i] === 'X' && str[i + 1] === '^' && Number.isInteger(parseInt(str[i + 2]))){
-            return parseInt(str[i + 2]);
-        }
-        if (str[i] === 'X' && str[i + 1] !== '^'){
-            return 1;
-        }
-    }
-    return 0;
-}
+const parse = require ('./parse');
+
+parse.checkSyntax(regex1, regex2, arr[0]);
 
 
-// ////////////////////////////
-struct.firstArray = setData(struct.firstArray);
-struct.secondArray = setData(struct.secondArray);
+
+
+// const {setData} = require('./parse');
+
+
+//////////////////////////
+struct.firstArray = parse.setData(struct.firstArray);
+struct.secondArray = parse.setData(struct.secondArray);
 console.log (struct);
