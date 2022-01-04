@@ -3,11 +3,11 @@
 const checkSyntax = (regex1, regex2, arr) => {
 
     const matches = arr.match(regex1);
-    console.log (matches);
+    // console.log (matches);
     
     if (matches != null){
         matches.forEach(element => {
-            console.log(`element => ${element}`);
+            // console.log(`element => ${element}`);
             const check = element.match(regex2);
             
             if (check === null){
@@ -19,13 +19,16 @@ const checkSyntax = (regex1, regex2, arr) => {
 };
 
 const setData = (str) => {
-    console.log(str);
     let j = 0;
+    let parentheses = {
+        index : 0,
+        error: 0
+    };
+
     for (let i = 0; i <= str.arr.length; i++){
         if ((str.arr[i] === 'X' || str.arr[i] === 'x') && str.arr[i + 1] === '^'){
             if (str.arr[i + 2] === '0'){
                 str.arr = str.arr.replace(/X\^0/gi, 1);
-                console.log(`\t\t${str.arr} \n`);
             }
             //
             if (str.arr[i + 2] === '1'){
@@ -51,7 +54,14 @@ const setData = (str) => {
             console.log(tmp,'|', i, j, `D = ${d}`);
             j = i;
         }
-        // 
+
+// ///////////////
+        parentheses.error = str.arr[i] === '(' ? parentheses.error + 1 : parentheses.error;
+        parentheses.error = str.arr[i] === ')' ? parentheses.error - 1 : parentheses.error;
+        parentheses.index = i;
+    }
+    if (parentheses.error != 0){
+        console.log (parentheses.error);
     }
     return str;
 }

@@ -56,7 +56,6 @@ if (f.length == 2){
     struct.secondArray.arr = '0';
 }
 
-console.log (struct);
 /////////////////// match
 
 const regex1 = /X[\^]?[0-2]{0,}/gi;
