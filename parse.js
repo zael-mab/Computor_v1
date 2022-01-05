@@ -20,27 +20,55 @@ const checkSyntax = (regex1, regex2, arr) => {
 
 const setData = (str) => {
     let j = 0;
-    let parentheses = {
-        index : 0,
-        error: 0
-    };
+    let p = 0;
+    let parentheses = 0;
+
+        // console.log ();
+        // console.log (' ------' + str.arr + ' | ' + str.arr.match(/(\-\s{0,}\-|\-\-)/g));
 
     for (let i = 0; i <= str.arr.length; i++){
+
+// ///////////////
+    parentheses = str.arr[i] === '(' ? parentheses + 1 : parentheses;
+    parentheses = str.arr[i] === ')' ? parentheses - 1 : parentheses;
+
+// ///////////////
         if ((str.arr[i] === 'X' || str.arr[i] === 'x') && str.arr[i + 1] === '^'){
             if (str.arr[i + 2] === '0'){
                 str.arr = str.arr.replace(/X\^0/gi, 1);
             }
             //
             if (str.arr[i + 2] === '1'){
-                str.arr = str.arr.replace('X^1', 'X');
+                str.arr = str.arr.replace(/X\^1/gi, 'X');
             }
         }
-// ////////////
-        if (str.arr[i] === '+' || str.arr[i] === '-' || i  === str.arr.length){
+        // check for multiple minus signs and reduce the form.
+        if (str.arr.match(/(\-\s{0,}\-|\-\-)/g)){
+            str.arr = str.arr.replace(/(\-\s{0,}\-|\-\-)/g , '+');
+        }
+        // check for multiple minus and plus signs and reduce the form.
+        if (str.arr.match(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g)){
+            str.arr = str.arr.replace(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g , '-');
+        }
+        
+        // ///////////////
+        // if (str.arr[i] === '('){
+        //     p = i;
+        // }
+        // if (str.arr[i] === ')'){
+        //     const holder = str.arr.slice(p, i + 1).trim();
+        //     str.par.push(holder);
+        //     p = 0;
+        //     console.log (`holder\t${holder}`);
+        // }
+
+// ////////////////
+        if ((str.arr[i] === '+' || str.arr[i] === '-' || i  === str.arr.length) && p === 0){
+            let tmp;
 
             if (i == 0)
                 continue;
-            const tmp = str.arr.slice(j, i).trim();
+            tmp = str.arr.slice(j, i).trim();
             let d = degree(tmp);
             if (d == 0){
                 str.x0.push(tmp);
@@ -50,18 +78,17 @@ const setData = (str) => {
                 str.x2.push(tmp);
             }
             str.degree = d > str.degree ? d : str.degree;
-            
             console.log(tmp,'|', i, j, `D = ${d}`);
             j = i;
         }
 
-// ///////////////
-        parentheses.error = str.arr[i] === '(' ? parentheses.error + 1 : parentheses.error;
-        parentheses.error = str.arr[i] === ')' ? parentheses.error - 1 : parentheses.error;
-        parentheses.index = i;
     }
-    if (parentheses.error != 0){
-        console.log (parentheses.error);
+    if (parentheses > 0){
+        console.log(`Error missing parenthese: ')' .`);
+        process.exit(1);
+    }else if (parentheses < 0){
+        console.log (`Error missing parenthese: '(' .`);
+        process.exit(1);
     }
     return str;
 }
@@ -80,4 +107,3 @@ const degree = (str) => {
 }
 
 module.exports = {checkSyntax, setData};
-// module.exports = setData;

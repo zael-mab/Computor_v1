@@ -14,6 +14,7 @@ const struct = {
     firstArray:{
         degree: 0,
         arr:'',
+        par:[],
         x0:[],
         x1:[],
         x2:[]
@@ -21,6 +22,7 @@ const struct = {
     secondArray:{
         degree: 0,
         arr: '',
+        par:[],
         x0:[],
         x1:[],
         x2:[]
@@ -72,13 +74,84 @@ const parse = require ('./parse');
 
 parse.checkSyntax(regex1, regex2, arr[0]);
 
-
-
-
-// const {setData} = require('./parse');
-
-
-//////////////////////////
 struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray = parse.setData(struct.secondArray);
+
 console.log (struct);
+
+
+const produceForm = (arr, degree) => {
+    let holder;
+    const cal = {
+        x: undefined,
+        sign: undefined,
+        y: undefined,
+        total: 0
+    };
+    arr.forEach(element => {
+            holder = element.slice();
+            cal.x = undefined;
+            cal.y = undefined;
+            cal.sign = undefined;
+            
+            const numbers = holder.match(/[0-9]{1,}/g);
+            const s = holder.match(/[\*\/\+\-]/g);
+            console.log (numbers);
+            console.log (s);
+
+            for (let j = 0; j < holder.length; j++){
+                
+                // if(holder[j].match(/([\*\/\+\-])/i)){
+                //     cal.sign = holder[j];
+                // }
+                
+                // if (Number.isInteger(parseInt(holder[j]))){
+                //     console.log (holder[j]);
+                //     if (cal.x != undefined  && cal.y === undefined){
+                //         cal.y = parseInt(holder[j]);
+                //     }
+                //     if (cal.x === undefined)
+                //         cal.x = parseInt(holder[j]);
+                // }
+            }
+            
+            // if (cal.sign != undefined && cal.x != undefined){
+                
+            //     if (cal.y === undefined){
+            //         if (cal.sign === '+')
+            //             cal.total += calculate(cal.x, 1, '*');
+            //         if (cal.sign === '-')
+            //             cal.total += calculate(cal.x, -1, '*');
+            //     }
+                
+            //     if (cal.y != undefined){
+            //         cal.total += calculate (cal.x, cal.y, cal.sign);
+            //     }
+            // }
+        });
+        console.log (cal);
+        
+}
+
+
+const calculate = (x, y, sign) => {
+    if ((x === 0 || y === 0)&& sign === '/'){
+        console.log('Error devision by 0');
+        process.exit(1);
+    }
+    switch (sign) {
+        case '+':
+             return x + y;
+        case '/':
+            return  x / y;
+        case '-':
+            return  x - y;
+        case '*':
+            return  x * y;
+    }
+};
+
+
+
+
+produceForm (struct.firstArray.x0, 0);
