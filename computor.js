@@ -95,86 +95,84 @@ const produceForm = (arr, degree) => {
     // console.log(arr);
     
     arr.forEach(element => {
-        holder = element.slice();
+        holder = element.slice().replace(/\s/g, '');
+        console.log (`holder === ${holder} | ${parseInt(holder)}`);
         cal.index = 0;
         const numbers = holder.match(/[0-9]{1,}/g);
         const s = holder.match(/\*\s{0,}\/|\/\s{0,}\*/g);
-        // console.log (numbers);
-        // console.log (s);
-        // cal.x = undefined;
-        // cal.y = undefined;
 
-        for (let j = 0; j < holder.length; j++){
-            
-            // Looking for the operation sign or a number sign
-            if(holder[j].match(/([\*\/\+\-])/i)){
-                cal.sign = holder[j];
-                console.log ('\tS=['+cal.sign+']');
-            }
-            // Looking for a Number
-            if (Number.isInteger(parseInt(holder[j])) && !Number.isInteger(parseInt(holder[j - 1]))){
-                // console.log (`\tN=[${holder[j]}]`);
+        if (holder.length > 2){
+            for (let j = 0; j < holder.length; j++){
                 
-                const nb = parseInt(numbers[cal.index]);
-                console.log(nb, cal.index);
-                cal.index += 1;
-                if (cal.x != undefined  && cal.y === undefined && nb != NaN){
-                    cal.y = nb;
+                // Looking for the operation sign or a number sign
+                if(holder[j].match(/([\*\/\+\-])/i)){
+                    cal.sign = holder[j];
+                    console.log ('\tS=['+cal.sign+']');
                 }
-                if (cal.x === undefined && nb != NaN)
-                    cal.x = nb;
-            }
-            if (cal.x != undefined && cal.x > 0){
-                let c = JSON.stringify(cal)
-                console.log (`->${c}`);
-                if (cal.y === undefined){
-                    if (cal.sign === '+'){
-                        cal.x = calculate(cal.x, 1, '*');
-                        cal.sign = undefined;
-                    }
-                    if (cal.sign === '-'){
-                        cal.x = calculate(cal.x, -1, '*');
-                        cal.sign = undefined;
-                    }
+                // Looking for a Number
+                if (Number.isInteger(parseInt(holder[j])) && !Number.isInteger(parseInt(holder[j - 1]))){
+                    console.log (`\tN=[${holder[j]}]`);
+                    
+        //             const nb = parseInt(numbers[cal.index]);
+        //             console.log(nb, cal.index);
+        //             cal.index += 1;
+        //             if (cal.x != undefined  && cal.y === undefined && nb != NaN){
+        //                 cal.y = nb;
+        //             }
+        //             if (cal.x === undefined && nb != NaN)
+        //                 cal.x = nb;
                 }
-                c = JSON.stringify(cal)
-                console.table (`=>${c}`);
+            
+            
+        //         if (cal.x != undefined && cal.x > 0){
+        //             let c = JSON.stringify(cal)
+        //             console.log (`->${c}`);
+        //             if (cal.y === undefined){
+        //                 if (cal.sign === '+'){
+        //                     cal.x = calculate(cal.x, 1, '*');
+        //                     cal.sign = undefined;
+        //                 }
+        //                 if (cal.sign === '-'){
+        //                     cal.x = calculate(cal.x, -1, '*');
+        //                     cal.sign = undefined;
+        //                 }
+        //             }
+        //             c = JSON.stringify(cal)
+        //             console.table (`=>${c}`);
+        //         }
             }
         }
-        // cal.sign = undefined;
-        
-        // 
-        
-        if (cal.sign === undefined){
-            cal.sign = '+';
-        }
-        if (cal.x != undefined){    
-            let c = JSON.stringify(cal)
-            console.log (`->${c}`);
-            // if (cal.y === undefined){
-            //     if (cal.sign === '+'){
-            //         cal.x = calculate(cal.x, 1, '*');
-            //     }
-            //     if (cal.sign === '-'){
-            //         cal.x = calculate(cal.x, -1, '*');
-            //     }
-            // }
+
+    //     if (cal.sign === undefined){
+    //         cal.sign = '+';
+    //     }
+    //     if (cal.x != undefined){    
+    //         let c = JSON.stringify(cal)
+    //         console.log (`->${c}`);
+    //         // if (cal.y === undefined){
+    //         //     if (cal.sign === '+'){
+    //         //         cal.x = calculate(cal.x, 1, '*');
+    //         //     }
+    //         //     if (cal.sign === '-'){
+    //         //         cal.x = calculate(cal.x, -1, '*');
+    //         //     }
+    //         // }
             
-            if (cal.y != undefined && cal.sign != undefined){
-                cal.total += calculate (cal.x, cal.y, cal.sign);
-                cal.x = undefined;
-                cal.y = undefined;
-            }
+    //         if (cal.y != undefined && cal.sign != undefined){
+    //             cal.total += calculate (cal.x, cal.y, cal.sign);
+    //             cal.x = undefined;
+    //             cal.y = undefined;
+    //         }
             
-            c = JSON.stringify(cal)
-            console.table (`=>${c}`);
-        }
+    //         c = JSON.stringify(cal)
+    //         console.table (`=>${c}`);
+        // }
     });
 
 
-    if (cal.x != undefined){
-        cal.total += cal.x;
-    }
+    // if (cal.x != undefined){
+    //     cal.total += cal.x;
+    // }
     console.log (cal);
 }
 
@@ -200,3 +198,4 @@ const calculate = (x, y, sign) => {
 
 
 produceForm (struct.firstArray.x0, 0);
+
