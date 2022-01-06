@@ -22,15 +22,19 @@ const setData = (str) => {
     let j = 0;
     let p = 0;
     let parentheses = 0;
-
-        // console.log ();
-        // console.log (' ------' + str.arr + ' | ' + str.arr.match(/(\-\s{0,}\-|\-\-)/g));
+    const regex = /\*\s{0,}\/|\/\s{0,}\*/;
+    
+    const match = str.arr.match(regex);
+    if (str.arr.match(regex)){
+        console.log ('Syntax Error');
+        process.exit(1);
+    }
 
     for (let i = 0; i <= str.arr.length; i++){
 
 // ///////////////
-    parentheses = str.arr[i] === '(' ? parentheses + 1 : parentheses;
-    parentheses = str.arr[i] === ')' ? parentheses - 1 : parentheses;
+        parentheses = str.arr[i] === '(' ? parentheses + 1 : parentheses;
+        parentheses = str.arr[i] === ')' ? parentheses - 1 : parentheses;
 
 // ///////////////
         if ((str.arr[i] === 'X' || str.arr[i] === 'x') && str.arr[i + 1] === '^'){
@@ -41,7 +45,7 @@ const setData = (str) => {
             if (str.arr[i + 2] === '1'){
                 str.arr = str.arr.replace(/X\^1/gi, 'X');
             }
-        }
+            }
         // check for multiple minus signs and reduce the form.
         if (str.arr.match(/(\-\s{0,}\-|\-\-)/g)){
             str.arr = str.arr.replace(/(\-\s{0,}\-|\-\-)/g , '+');

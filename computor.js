@@ -62,8 +62,7 @@ if (f.length == 2){
 
 const regex1 = /X[\^]?[0-2]{0,}/gi;
 const regex2 = /^X[\^][0-2]{1}$|^X$/i;
-const regex3 = /^[^a-wy-z<>%@#&!_]+$/ig;
-
+const regex3 = /^[^a-wy-z<>%@#&!_.]+$/ig;
 
 if (arr[0].match(regex3) === null){
     console.log (`Syntax Error`);
@@ -83,54 +82,100 @@ console.log (struct);
 const produceForm = (arr, degree) => {
     let holder;
     const cal = {
+        index:0,
         x: undefined,
         sign: undefined,
         y: undefined,
         total: 0
     };
-    arr.forEach(element => {
-            holder = element.slice();
-            cal.x = undefined;
-            cal.y = undefined;
-            cal.sign = undefined;
-            
-            const numbers = holder.match(/[0-9]{1,}/g);
-            const s = holder.match(/[\*\/\+\-]/g);
-            console.log (numbers);
-            console.log (s);
 
-            for (let j = 0; j < holder.length; j++){
-                
-                // if(holder[j].match(/([\*\/\+\-])/i)){
-                //     cal.sign = holder[j];
-                // }
-                
-                // if (Number.isInteger(parseInt(holder[j]))){
-                //     console.log (holder[j]);
-                //     if (cal.x != undefined  && cal.y === undefined){
-                //         cal.y = parseInt(holder[j]);
-                //     }
-                //     if (cal.x === undefined)
-                //         cal.x = parseInt(holder[j]);
-                // }
-            }
+    arr.sort((fir, sec) => {
+        return fir.length < sec.length ? 1 : -1;
+    });
+    // console.log(arr);
+    
+    arr.forEach(element => {
+        holder = element.slice();
+        cal.index = 0;
+        const numbers = holder.match(/[0-9]{1,}/g);
+        const s = holder.match(/\*\s{0,}\/|\/\s{0,}\*/g);
+        // console.log (numbers);
+        // console.log (s);
+        // cal.x = undefined;
+        // cal.y = undefined;
+
+        for (let j = 0; j < holder.length; j++){
             
-            // if (cal.sign != undefined && cal.x != undefined){
+            // Looking for the operation sign or a number sign
+            if(holder[j].match(/([\*\/\+\-])/i)){
+                cal.sign = holder[j];
+                console.log ('\tS=['+cal.sign+']');
+            }
+            // Looking for a Number
+            if (Number.isInteger(parseInt(holder[j])) && !Number.isInteger(parseInt(holder[j - 1]))){
+                // console.log (`\tN=[${holder[j]}]`);
                 
-            //     if (cal.y === undefined){
-            //         if (cal.sign === '+')
-            //             cal.total += calculate(cal.x, 1, '*');
-            //         if (cal.sign === '-')
-            //             cal.total += calculate(cal.x, -1, '*');
+                const nb = parseInt(numbers[cal.index]);
+                console.log(nb, cal.index);
+                cal.index += 1;
+                if (cal.x != undefined  && cal.y === undefined && nb != NaN){
+                    cal.y = nb;
+                }
+                if (cal.x === undefined && nb != NaN)
+                    cal.x = nb;
+            }
+            if (cal.x != undefined && cal.x > 0){
+                let c = JSON.stringify(cal)
+                console.log (`->${c}`);
+                if (cal.y === undefined){
+                    if (cal.sign === '+'){
+                        cal.x = calculate(cal.x, 1, '*');
+                        cal.sign = undefined;
+                    }
+                    if (cal.sign === '-'){
+                        cal.x = calculate(cal.x, -1, '*');
+                        cal.sign = undefined;
+                    }
+                }
+                c = JSON.stringify(cal)
+                console.table (`=>${c}`);
+            }
+        }
+        // cal.sign = undefined;
+        
+        // 
+        
+        if (cal.sign === undefined){
+            cal.sign = '+';
+        }
+        if (cal.x != undefined){    
+            let c = JSON.stringify(cal)
+            console.log (`->${c}`);
+            // if (cal.y === undefined){
+            //     if (cal.sign === '+'){
+            //         cal.x = calculate(cal.x, 1, '*');
             //     }
-                
-            //     if (cal.y != undefined){
-            //         cal.total += calculate (cal.x, cal.y, cal.sign);
+            //     if (cal.sign === '-'){
+            //         cal.x = calculate(cal.x, -1, '*');
             //     }
             // }
-        });
-        console.log (cal);
-        
+            
+            if (cal.y != undefined && cal.sign != undefined){
+                cal.total += calculate (cal.x, cal.y, cal.sign);
+                cal.x = undefined;
+                cal.y = undefined;
+            }
+            
+            c = JSON.stringify(cal)
+            console.table (`=>${c}`);
+        }
+    });
+
+
+    if (cal.x != undefined){
+        cal.total += cal.x;
+    }
+    console.log (cal);
 }
 
 
