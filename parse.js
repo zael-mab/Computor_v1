@@ -20,11 +20,10 @@ const checkSyntax = (regex1, regex2, arr) => {
 
 const setData = (str) => {
     let j = 0;
-    let p = 0;
     let parentheses = 0;
-    const regex = /\*\s{0,}\/|\/\s{0,}\*/;
-    
-    const match = str.arr.match(regex);
+    const regex = /\*\s{0,}\/|\/\s{0,}\*|\/\s{0,}\/|\*\s{0,}\*/;
+
+    str.arr = str.arr.replace(/\s/g, '');
     if (str.arr.match(regex)){
         console.log ('Syntax Error');
         process.exit(1);
@@ -67,7 +66,8 @@ const setData = (str) => {
         // }
 
 // ////////////////
-        if ((str.arr[i] === '+' || str.arr[i] === '-' || i  === str.arr.length) && p === 0){
+        if ((str.arr[i] === '+' || str.arr[i] === '-' || i  === str.arr.length) &&
+         (str.arr[i - 1] !== '/' && str.arr[i - 1] !== '*')){
             let tmp;
 
             if (i == 0)
@@ -82,7 +82,7 @@ const setData = (str) => {
                 str.x2.push(tmp);
             }
             str.degree = d > str.degree ? d : str.degree;
-            console.log(tmp,'|', i, j, `D = ${d}`);
+            // console.log(tmp,'|', i, j, `D = ${d}`);
             j = i;
         }
 

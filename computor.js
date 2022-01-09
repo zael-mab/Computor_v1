@@ -77,6 +77,7 @@ struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray = parse.setData(struct.secondArray);
 
 console.log (struct);
+//  ([\+\-]{0,}[0-9]{1,})([\*\/]{1}[0-9]{1,})
 
 
 const produceForm = (arr, degree) => {
@@ -89,90 +90,25 @@ const produceForm = (arr, degree) => {
         total: 0
     };
 
-    arr.sort((fir, sec) => {
-        return fir.length < sec.length ? 1 : -1;
-    });
-    // console.log(arr);
     
     arr.forEach(element => {
-        holder = element.slice().replace(/\s/g, '');
-        console.log (`holder === ${holder} | ${parseInt(holder)}`);
-        cal.index = 0;
-        const numbers = holder.match(/[0-9]{1,}/g);
-        const s = holder.match(/\*\s{0,}\/|\/\s{0,}\*/g);
-
-        if (holder.length > 2){
-            for (let j = 0; j < holder.length; j++){
-                
-                // Looking for the operation sign or a number sign
-                if(holder[j].match(/([\*\/\+\-])/i)){
-                    cal.sign = holder[j];
-                    console.log ('\tS=['+cal.sign+']');
-                }
-                // Looking for a Number
-                if (Number.isInteger(parseInt(holder[j])) && !Number.isInteger(parseInt(holder[j - 1]))){
-                    console.log (`\tN=[${holder[j]}]`);
-                    
-        //             const nb = parseInt(numbers[cal.index]);
-        //             console.log(nb, cal.index);
-        //             cal.index += 1;
-        //             if (cal.x != undefined  && cal.y === undefined && nb != NaN){
-        //                 cal.y = nb;
-        //             }
-        //             if (cal.x === undefined && nb != NaN)
-        //                 cal.x = nb;
-                }
-            
-            
-        //         if (cal.x != undefined && cal.x > 0){
-        //             let c = JSON.stringify(cal)
-        //             console.log (`->${c}`);
-        //             if (cal.y === undefined){
-        //                 if (cal.sign === '+'){
-        //                     cal.x = calculate(cal.x, 1, '*');
-        //                     cal.sign = undefined;
-        //                 }
-        //                 if (cal.sign === '-'){
-        //                     cal.x = calculate(cal.x, -1, '*');
-        //                     cal.sign = undefined;
-        //                 }
-        //             }
-        //             c = JSON.stringify(cal)
-        //             console.table (`=>${c}`);
-        //         }
-            }
+        holder = element.slice();
+        let match1 = holder.match(/[\*\/]/g);
+        
+        // / or * operation
+        if (holder.match(/[\*\/]/g)){
+            console.log (`\t [${holder}]operation ${match1}`);
+            match1 = holder.match(/(?:[\*\/])[0-9]{1,}/g);
+            console.log (`\t\tsec match =>${match1}`);
+            console.log (`\t ther match =>${match1}`);
+            match1 = holder.match(/^[\+\-]{0,}[0-9]{1,}/);
+            console.log (`\t four match =>${match1}`);
         }
+        console.log (`holder === ${holder} | ${parseInt(holder)}`);
 
-    //     if (cal.sign === undefined){
-    //         cal.sign = '+';
-    //     }
-    //     if (cal.x != undefined){    
-    //         let c = JSON.stringify(cal)
-    //         console.log (`->${c}`);
-    //         // if (cal.y === undefined){
-    //         //     if (cal.sign === '+'){
-    //         //         cal.x = calculate(cal.x, 1, '*');
-    //         //     }
-    //         //     if (cal.sign === '-'){
-    //         //         cal.x = calculate(cal.x, -1, '*');
-    //         //     }
-    //         // }
-            
-    //         if (cal.y != undefined && cal.sign != undefined){
-    //             cal.total += calculate (cal.x, cal.y, cal.sign);
-    //             cal.x = undefined;
-    //             cal.y = undefined;
-    //         }
-            
-    //         c = JSON.stringify(cal)
-    //         console.table (`=>${c}`);
-        // }
     });
 
 
-    // if (cal.x != undefined){
-    //     cal.total += cal.x;
-    // }
     console.log (cal);
 }
 
