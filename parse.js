@@ -24,7 +24,7 @@ const setData = (str) => {
     const regex = /\*\s{0,}\/|\/\s{0,}\*|\/\s{0,}\/|\*\s{0,}\*/;
 
     str.arr = str.arr.replace(/\s/g, '');
-    if (str.arr.match(regex)){
+    if (str.arr.match(regex) || str.arr.match(/[\+\-][\/\*]/g)){
         console.log ('Syntax Error');
         process.exit(1);
     }

@@ -98,11 +98,11 @@ const produceForm = (arr, degree) => {
         // / or * operation
         if (holder.match(/[\*\/]/g)){
             console.log (`\t [${holder}]operation ${match1}`);
-            match1 = holder.match(/(?:[\*\/])[0-9]{1,}/g);
+            match1 = holder.match(/(?:[\*\/])[\+-]?[0-9]{1,}/g);
             console.log (`\t\tsec match =>${match1}`);
-            console.log (`\t ther match =>${match1}`);
             match1 = holder.match(/^[\+\-]{0,}[0-9]{1,}/);
-            console.log (`\t four match =>${match1}`);
+            console.log (`\t ther match =>${match1}`);
+            // console.log (`\t four match =>${match1}`);
         }
         console.log (`holder === ${holder} | ${parseInt(holder)}`);
 
