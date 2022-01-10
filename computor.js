@@ -96,10 +96,75 @@ const regg = /[\+\-]{1}[0-9]{1,}[\+\-]{0,}(?![\/\*])|^[0-9]{1,}[\+\-]{1}|(?![\/\
 
 
 
+
+
+
+const xxx = (cal, holder, j) => {
+    // looking for the sign
+    if (holder[j].match(/[\+\-]/)) {
+        cal.index = 0;
+        cal.ySign = (cal.ySign === undefined && cal.x) ? holder[j] : cal.ySign;
+        cal.xSign = (!cal.x && !cal.y) ? holder[j] : cal.xSign;
+    }
+
+    // Looking for the operation
+    if (holder[j].match(/([\*\/])/)) {
+        cal.index = 0;
+        cal.oper = holder[j];
+    }
+    // Looking for a Number
+
+    if (holder[j].match(/[0-9]/) && cal.index == 0) {
+        cal.y = (cal.y === undefined && cal.x) ? parseFloat(holder.slice(j, )) : cal.y;
+        cal.x = (cal.x) ? cal.x : parseFloat(holder.slice(j, ));
+        cal.index = 1;
+
+        // console.log('x=' + cal.x + ' ' + 'y=' + cal.y + ' | ' + holder.slice(j, ));
+    }
+    if (cal.x && cal.y) {
+        let factor = 1;
+        factor = cal.xSign === '-' ? -1 : 1;
+        cal.x = calculate(cal.x, factor, '*');
+        factor = cal.ySign === '-' ? -1 : 1;
+        cal.y = calculate(cal.y, factor, '*');
+        if (cal.oper != undefined) {
+            cal.total += calculate(cal.x, cal.y, cal.oper);
+            cal = init(cal);
+        } else {
+            cal.total += calculate(cal.x, cal.y, '+');
+            cal.x = undefined;
+            cal.y = undefined;
+        }
+    }
+    if (cal.x && cal.oper && cal.total != 0) {
+        cal.x = calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
+        var t = cal.total;
+        cal.total = calculate(cal.total, cal.x, cal.oper);
+        cal.oper = undefined;
+        cal.x = undefined;
+        cal.xSign = undefined;
+    }
+    return cal;
+}
+
+
+
+
+const init = (cal) => {
+    cal.x = undefined;
+    cal.y = undefined;
+    cal.xSign = undefined;
+    cal.ySign = undefined;
+    cal.oper = undefined;
+    return cal;
+}
+
+
+
 //  //////////////
 const produceForm = (arr, degree) => {
     let holder;
-    const cal = {
+    let cal = {
         index: 0,
         x: undefined,
         xSign: undefined,
@@ -121,85 +186,34 @@ const produceForm = (arr, degree) => {
         cal.xSign = undefined;
         cal.ySign = undefined;
         cal.total = 0;
-        for (let j = 0; j < holder.length; j++) {
 
-            // looking for the sign
-            if (holder[j].match(/[\+\-]/)) {
-                cal.index = 0;
-                cal.ySign = (cal.ySign === undefined && cal.x) ? holder[j] : cal.ySign;
-                cal.xSign = (!cal.x && !cal.y) ? holder[j] : cal.xSign;
-            }
-
-            // Looking for the operation
-            if (holder[j].match(/([\*\/])/)) {
-                cal.index = 0;
-                cal.oper = holder[j];
-                // console.log('sign =' + cal.oper);
-            }
-            // Looking for a Number
-
-            if (holder[j].match(/[0-9]/) && cal.index == 0) {
-                cal.y = (cal.y === undefined && cal.x) ? parseFloat(holder.slice(j, )) : cal.y;
-                cal.x = (cal.x) ? cal.x : parseFloat(holder.slice(j, ));
-                cal.index = 1;
-
-                console.log('x=' + cal.x + ' ' + 'y=' + cal.y + ' | ' + holder.slice(j, ));
-            }
-            //  ////////////////////////////
-            if (cal.x && cal.y) {
-                // console.log(`XSIGN=${cal.xSign}`);
-                let factor = 1;
-                factor = cal.xSign === '-' ? -1 : 1;
-                cal.x = calculate(cal.x, factor, '*');
-                factor = cal.ySign === '-' ? -1 : 1;
-                cal.y = calculate(cal.y, factor, '*');
-                if (cal.oper != undefined) {
-                    cal.total += calculate(cal.x, cal.y, cal.oper);
-                    console.log(`$-------->x=${cal.x} ${cal.oper} y=${cal.y} = ${cal.total}`);
-                    cal.x = undefined;
-                    cal.y = undefined;
-                    cal.xSign = undefined;
-                    cal.ySign = undefined;
-                    cal.oper = undefined;
-                } else {
-                    cal.total += calculate(cal.x, cal.y, '+');
-                    cal.x = undefined;
-                    cal.y = undefined;
-                    console.log(`$-------->x=${cal.x} + y=${cal.y} = ${cal.total}`);
-                }
-            }
-            // console.log(`XSIGN=${cal.oper}`);
-            if (cal.x && cal.oper && cal.total != 0) {
-                cal.x = calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-                var t = cal.total;
-                cal.total = calculate(cal.total, cal.x, cal.oper);
-                console.log(`$---->total=${t} ${cal.oper} x=${cal.x} = ${cal.total}`);
-                cal.oper = undefined;
-                cal.x = undefined;
-                cal.xSign = undefined;
-            }
-            // if (cal.x && cal.oper && cal.total > 0) {
-            //     cal.x = calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-            //     cal.total = calculate(cal.total, cal.x, cal.oper);
-            //     console.log(`$---->total=${cal.total} ${cal.oper} x=${cal.x} = ${cal.total}`);
-            //     cal.oper = undefined;
-            //     cal.x = undefined;
-            //     cal.xSign = undefined;
-            // } // console.log('Y');
-
+        if (degree > 0) {
+            const match = holder.match(/[X][\^]{0,1}[0-2]{0,1}/g);
+            holder = holder.replace(match, '1');
         }
-        console.log('------------');
+
+
+        for (let j = 0; j < holder.length; j++) {
+            cal = xxx(cal, holder, j);
+        }
+
         if (cal.x && !cal.y && !cal.oper) {
             cal.x = calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-            console.log(' x = ' + cal.x);
             cal.total += cal.x;
             cal.xSign = undefined;
             cal.x = undefined;
         }
         total += cal.total;
     });
-    cal.total = total;
-    console.log(cal);
+    let res;
+    if (degree == 1) {
+        res = total != 0 ? total.toString() + `*X^${degree}` : '0';
+    } else if (degree == 2) {
+        res = total != 0 ? total.toString() + `*X^${degree}` : '0';
+    } else {
+        res = total.toString();
+    }
+    return (res);
 }
 
 
@@ -228,4 +242,7 @@ const calculate = (x, y, sign) => {
 
 
 
-produceForm(struct.firstArray.x0, 0);
+struct.firstArray.x0 = produceForm(struct.firstArray.x0, 0);
+struct.firstArray.x1 = produceForm(struct.firstArray.x1, 1);
+struct.firstArray.x2 = produceForm(struct.firstArray.x2, 2);
+console.log(struct);
