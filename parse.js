@@ -1,8 +1,8 @@
+
 const checkSyntax = (regex1, regex2, arr) => {
 
     const matches = arr.match(regex1);
     // console.log (matches);
-
     if (matches != null) {
         matches.forEach(element => {
             // console.log(`element => ${element}`);
@@ -16,6 +16,7 @@ const checkSyntax = (regex1, regex2, arr) => {
     }
 };
 
+//////////////////////////////
 const setData = (str) => {
     let j = 0;
     let parentheses = 0;
@@ -109,4 +110,27 @@ const degree = (str) => {
     return 0;
 }
 
-module.exports = { checkSyntax, setData };
+
+const calculate = (x, y, sign) => {
+    if (!x | !y) {
+        console.log('E');
+        process.exit(1);
+    }
+    if ((x === 0 || y === 0) && sign === '/') {
+        console.log('Error devision by 0');
+        process.exit(1);
+    }
+    switch (sign) {
+        case '+':
+            return x + y;
+        case '/':
+            return x / y;
+        case '-':
+            return x - y;
+        case '*':
+            return x * y;
+    }
+};
+
+
+module.exports = { checkSyntax, setData , calculate};
