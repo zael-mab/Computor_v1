@@ -80,8 +80,8 @@ parse.checkSyntax(regex1, regex2, arr[0]);
 struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray = parse.setData(struct.secondArray);
 
-struct.firstArray.arr =
-    console.log(struct);
+// struct.firstArray.arr =
+console.log(struct);
 
 // +-n*/m+-
 const reg = /[\+\-]{0,1}\s{0,}[0-9]{1,}\s{0,}[\*\/]\s{0,}[0-9]{1,}/;
@@ -99,7 +99,7 @@ const regg = /[\+\-]{1}[0-9]{1,}[\+\-]{0,}(?![\/\*])|^[0-9]{1,}[\+\-]{1}|(?![\/\
 
 
 
-const xxx = (cal, holder, j) => {
+const operat = (cal, holder, j) => {
     // looking for the sign
     if (holder[j].match(/[\+\-]/)) {
         cal.index = 0;
@@ -194,7 +194,7 @@ const produceForm = (arr, degree) => {
 
 
         for (let j = 0; j < holder.length; j++) {
-            cal = xxx(cal, holder, j);
+            cal = operat(cal, holder, j);
         }
 
         if (cal.x && !cal.y && !cal.oper) {
