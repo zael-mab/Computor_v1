@@ -139,9 +139,9 @@ reducedForm.x2.push(correctSign(struct.firstArray.x2.concat('+' + struct.secondA
 //////
 
 console.log(reducedForm);
-reducedForm.x0 = produce.produceForm(reducedForm.x0, 0);
-reducedForm.x1 = produce.produceForm(reducedForm.x1, 1);
-reducedForm.x2 = produce.produceForm(reducedForm.x2, 2);
+reducedForm.x0 = reduce.reduceForm(reducedForm.x0, 0);
+reducedForm.x1 = reduce.reduceForm(reducedForm.x1, 1);
+reducedForm.x2 = reduce.reduceForm(reducedForm.x2, 2);
 
 struct.reducedForm = reducedForm.x0 + ' + ' + reducedForm.x1 + ' + ' + reducedForm.x2 + ' = 0';
 struct.reducedForm = correctSign(struct.reducedForm);
