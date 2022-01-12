@@ -2,7 +2,6 @@ const checkSyntax = (regex1, regex2, arr) => {
 
     const matches = arr.match(regex1);
     // console.log (matches);
-
     if (matches != null) {
         matches.forEach(element => {
             // console.log(`element => ${element}`);
@@ -16,16 +15,17 @@ const checkSyntax = (regex1, regex2, arr) => {
     }
 };
 
+//////////////////////////////
 const setData = (str) => {
     let j = 0;
     let parentheses = 0;
     const regex = /\*\s{0,}\/|\/\s{0,}\*|\/\s{0,}\/|\*\s{0,}\*/;
 
-    str.arr = str.arr.replace(/\s/g, '');
     if (str.arr.match(regex) || str.arr.match(/[\+\-][\/\*]/g) || str.arr.match(/[\/]X/g)) {
         console.log('Syntax Error');
         process.exit(1);
     }
+
 
     for (let i = 0; i <= str.arr.length; i++) {
 
@@ -42,14 +42,6 @@ const setData = (str) => {
             if (str.arr[i + 2] === '1') {
                 str.arr = str.arr.replace(/X\^1/gi, 'X');
             }
-        }
-        // check for multiple minus signs and reduce the form.
-        if (str.arr.match(/(\-\s{0,}\-|\-\-)/g)) {
-            str.arr = str.arr.replace(/(\-\s{0,}\-|\-\-)/g, '+');
-        }
-        // check for multiple minus and plus signs and reduce the form.
-        if (str.arr.match(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g)) {
-            str.arr = str.arr.replace(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g, '-');
         }
 
         // ///////////////
@@ -109,4 +101,27 @@ const degree = (str) => {
     return 0;
 }
 
-module.exports = { checkSyntax, setData };
+
+const calculate = (x, y, sign) => {
+    if (!x | !y) {
+        console.log('E');
+        process.exit(1);
+    }
+    if ((x === 0 || y === 0) && sign === '/') {
+        console.log('Error devision by 0');
+        process.exit(1);
+    }
+    switch (sign) {
+        case '+':
+            return x + y;
+        case '/':
+            return x / y;
+        case '-':
+            return x - y;
+        case '*':
+            return x * y;
+    }
+};
+
+
+module.exports = { checkSyntax, setData, calculate };
