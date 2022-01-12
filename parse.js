@@ -1,4 +1,3 @@
-
 const checkSyntax = (regex1, regex2, arr) => {
 
     const matches = arr.match(regex1);
@@ -22,11 +21,11 @@ const setData = (str) => {
     let parentheses = 0;
     const regex = /\*\s{0,}\/|\/\s{0,}\*|\/\s{0,}\/|\*\s{0,}\*/;
 
-    str.arr = str.arr.replace(/\s/g, '');
     if (str.arr.match(regex) || str.arr.match(/[\+\-][\/\*]/g) || str.arr.match(/[\/]X/g)) {
         console.log('Syntax Error');
         process.exit(1);
     }
+
 
     for (let i = 0; i <= str.arr.length; i++) {
 
@@ -43,14 +42,6 @@ const setData = (str) => {
             if (str.arr[i + 2] === '1') {
                 str.arr = str.arr.replace(/X\^1/gi, 'X');
             }
-        }
-        // check for multiple minus signs and reduce the form.
-        if (str.arr.match(/(\-\s{0,}\-|\-\-)/g)) {
-            str.arr = str.arr.replace(/(\-\s{0,}\-|\-\-)/g, '+');
-        }
-        // check for multiple minus and plus signs and reduce the form.
-        if (str.arr.match(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g)) {
-            str.arr = str.arr.replace(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g, '-');
         }
 
         // ///////////////
@@ -133,4 +124,4 @@ const calculate = (x, y, sign) => {
 };
 
 
-module.exports = { checkSyntax, setData , calculate};
+module.exports = { checkSyntax, setData, calculate };

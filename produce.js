@@ -1,5 +1,4 @@
-
-const parse = require ('./parse');
+const parse = require('./parse');
 
 const operat = (cal, holder, j) => {
     // looking for the sign
@@ -65,7 +64,7 @@ const init = (cal) => {
 
 
 //  //////////////
-const produceForm = (arr, degree) => {
+const reduceForm = (arr, degree) => {
     let holder;
     let cal = {
         index: 0,
@@ -120,4 +119,4 @@ const produceForm = (arr, degree) => {
 }
 
 
-module.exports = {produceForm};
+module.exports = { reduceForm };
