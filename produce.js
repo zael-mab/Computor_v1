@@ -40,7 +40,6 @@ const operat = (cal, holder, j) => {
     }
     if (cal.x && cal.oper && cal.total != 0) {
         cal.x = parse.calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-        var t = cal.total;
         cal.total = parse.calculate(cal.total, cal.x, cal.oper);
         cal.oper = undefined;
         cal.x = undefined;

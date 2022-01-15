@@ -45,13 +45,17 @@ for (let i = 2; i < process.argv.length; i++) {
 
 ///////////////// splite the equation
 const f = arr[0].split('=');
-
 if (f.length == 2) {
     struct.firstArray.arr = f[0].trim();
     struct.secondArray.arr = f[1].trim();
 } else if (f.length == 1) {
     struct.firstArray.arr = f[0].trim();
     struct.secondArray.arr = '0';
+}
+// console.log (f)
+if (!f[0].replace(/\s/g, '') && (!(f[1].replace(/\s/g, ''))) ){
+    console.log ('Syntax Error');
+    process.exit(1);
 }
 
 /////////////////// match
@@ -103,8 +107,12 @@ const rev = (str) => {
 struct.secondArray.arr = rev(struct.secondArray.arr);
 
 struct.firstArray.arr = struct.firstArray.arr.replace(/\s/g, '');;
-struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray.arr = struct.secondArray.arr.replace(/\s/g, '');;
+// if (!struct.firstArray.arr || !struct.secondArray.arr){
+//     console.log ('Error');
+//     process.exit (1);
+// }
+struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray = parse.setData(struct.secondArray);
 
 //////////
@@ -180,7 +188,9 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     console.log('The solution is:\n0');
 }else if (newForm.x1 != 0 && newForm.x0 != 0 && newForm.x2 == 0){
     let tmp = [];
-    tmp.push (newForm.x0.concat('/-'+newForm.x1));
-    console.log (`The solution is:\n${reduce.reduceForm(tmp).form}`);
+    tmp.push(newForm.x0.concat('/-'+newForm.x1));
+    console.log(`The solution is:\n${tmp[0]} = ${reduce.reduceForm(tmp).form}`);
+}else if (newForm.x2 != 0){
+    console.log('2');
 }
 /////////

@@ -8,7 +8,7 @@ const checkSyntax = (regex1, regex2, arr) => {
             const check = element.match(regex2);
 
             if (check === null) {
-                console.log(`syntax Error [${element}] | ${arr}`);
+                console.log(`syntax Error [${element}] | ${arr}\nI can't solve that`);
                 process.exit(1);
             }
         });
