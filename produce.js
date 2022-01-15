@@ -19,7 +19,6 @@ const operat = (cal, holder, j) => {
         cal.y = (cal.y === undefined && cal.x) ? parseFloat(holder.slice(j, )) : cal.y;
         cal.x = (cal.x) ? cal.x : parseFloat(holder.slice(j, ));
         cal.index = 1;
-
         // console.log('x=' + cal.x + ' ' + 'y=' + cal.y + ' | ' + holder.slice(j, ));
     }
     if (cal.x && cal.y) {
@@ -28,9 +27,11 @@ const operat = (cal, holder, j) => {
         cal.x = parse.calculate(cal.x, factor, '*');
         factor = cal.ySign === '-' ? -1 : 1;
         cal.y = parse.calculate(cal.y, factor, '*');
+
         if (cal.oper != undefined) {
             cal.total += parse.calculate(cal.x, cal.y, cal.oper);
             cal = init(cal);
+            cal.oper = undefined;
         } else {
             cal.total += parse.calculate(cal.x, cal.y, '+');
             cal.x = undefined;
@@ -50,14 +51,11 @@ const operat = (cal, holder, j) => {
 
 
 
-
-
 const init = (cal) => {
     cal.x = undefined;
     cal.y = undefined;
     cal.xSign = undefined;
     cal.ySign = undefined;
-    cal.oper = undefined;
     return cal;
 }
 
@@ -78,22 +76,15 @@ const reduceForm = (arr, degree) => {
     let total = 0;
 
     arr.forEach(element => {
-        holder = element.slice().replace(/\s/g, '');
-        const numbers = holder.match(/[0-9]{1,}/g);
-        const s = holder.match(/\*\s{0,}\/|\/\s{0,}\*/g);
+        holder = element.slice();
 
         cal.index = 0;
-        cal.x = undefined;
-        cal.y = undefined;
-        cal.xSign = undefined;
-        cal.ySign = undefined;
+        cal = init(cal);
         cal.total = 0;
 
         if (degree > 0) {
-            const match = holder.match(/[X][\^]{0,1}[0-2]{0,1}/g);
-            holder = holder.replace(match, '1');
+            holder = holder.replace(/[X][\^]{0,1}[0-2]{0,1}/g, '1');
         }
-
 
         for (let j = 0; j < holder.length; j++) {
             cal = operat(cal, holder, j);
@@ -109,9 +100,11 @@ const reduceForm = (arr, degree) => {
     });
     let res;
     if (degree == 1) {
-        res = total != 0 ? total.toString() + `*X^${degree}` : '0';
+        res = total != 0 ? total.toString() + `*X` : '0';
+        // res = total != 0 ? total.toString() : '0';
     } else if (degree == 2) {
         res = total != 0 ? total.toString() + `*X^${degree}` : '0';
+        // res = total != 0 ? total.toString() : '0';
     } else {
         res = total.toString();
     }

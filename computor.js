@@ -1,6 +1,6 @@
-// get the equation
-// get two sidece by spliting with '='
-// simplify the two strings (reduced form)
+// get the equation *
+// get two sidece by spliting with '=' *
+// simplify the two strings (reduced form) *
 // get the b , a and c then calculate Delta = b^2 - 4ac
 // solve quation S={( -b+√Delta / 2a ); (-b-√Delta / 2a)}
 
@@ -73,7 +73,8 @@ const parse = require('./parse');
 //
 parse.checkSyntax(regex1, regex2, arr[0]);
 
-const correctSign = (str) => { // check for multiple minus signs and reduce the form.
+const correctSign = (str) => {
+    // check for multiple minus signs and reduce the form.
     if (str.match(/(\-\s{0,}\-|\-\-)/g)) {
         str = str.replace(/(\-\s{0,}\-|\-\-)/g, '+');
     }
@@ -125,32 +126,62 @@ struct.secondArray.x0 = reduce.reduceForm(struct.secondArray.x0, 0);
 struct.secondArray.x1 = reduce.reduceForm(struct.secondArray.x1, 1);
 struct.secondArray.x2 = reduce.reduceForm(struct.secondArray.x2, 2);
 
-let reducedForm = {
+let newForm = {
     x0: [],
     x1: [],
     x2: []
 };
 
-reducedForm.x0.push(correctSign(struct.firstArray.x0.concat('+' + struct.secondArray.x0)));
-reducedForm.x1.push(correctSign(struct.firstArray.x1.concat('+' + struct.secondArray.x1)));
-reducedForm.x2.push(correctSign(struct.firstArray.x2.concat('+' + struct.secondArray.x2)));
+// .concat('+' + struct.secondArray.x1)
+// let tmp = [];
+// tmp.push(struct.firstArray.x1);
+// struct.firstArray.x1 = tmp;
+// console.log(tmp);
+// const x1 = reduce.reduceForm(struct.firstArray.x1, 1);
+// console.log(x1);
+
+newForm.x0.push(struct.firstArray.x0, struct.secondArray.x0);
+newForm.x1.push(struct.firstArray.x1, struct.secondArray.x1);
+newForm.x2.push(struct.firstArray.x2, struct.secondArray.x2);
+console.log(newForm);
+newForm.x0 = reduce.reduceForm(newForm.x0, 0);
+newForm.x1 = reduce.reduceForm(newForm.x1, 1);
+newForm.x2 = reduce.reduceForm(newForm.x2, 2);
+console.log(newForm);
+// newForm.x0.push(correctSign(struct.firstArray.x0.concat('+' + struct.secondArray.x0)));
+// newForm.x1.push(correctSign());
+// newForm.x2.push(correctSign(struct.firstArray.x2.concat('+' + struct.secondArray.x2)));
 
 
 //////
 
-console.log(reducedForm);
-reducedForm.x0 = reduce.reduceForm(reducedForm.x0, 0);
-reducedForm.x1 = reduce.reduceForm(reducedForm.x1, 1);
-reducedForm.x2 = reduce.reduceForm(reducedForm.x2, 2);
+// console.log(newForm);
+// newForm.x0 = reduce.reduceForm(newForm.x0, 0);
+// newForm.x1 = reduce.reduceForm(newForm.x1, 1);
+// newForm.x2 = reduce.reduceForm(newForm.x2, 2);
 
-struct.reducedForm = reducedForm.x0 + ' + ' + reducedForm.x1 + ' + ' + reducedForm.x2 + ' = 0';
-struct.reducedForm = correctSign(struct.reducedForm);
-console.log(reducedForm);
+// if (parseInt(reducedForm.x2) === 0) {
+//     reducedForm.x2 = '';
+// }
+
+// struct.reducedForm = newForm.x0 + ' + ' + newForm.x1 + ' + ' + newForm.x2 + ' = 0';
+// struct.reducedForm = correctSign(struct.reducedForm);
+// console.log(newForm);
 
 // //*******************Console***********************//
-console.log('Reduced form: ' + struct.reducedForm);
-const degree = struct.firstArray.degree > struct.secondArray.degree ? struct.firstArray.degree : struct.secondArray.degree;
-console.log(`Polynomial degree: ${degree}`);
+// console.log('Reduced form: ' + struct.reducedForm);
+// const degree = struct.firstArray.degree > struct.secondArray.degree ? struct.firstArray.degree : struct.secondArray.degree;
+// console.log(`Polynomial degree: ${degree}`);
 // //******************************************//
+
+// Solutions
+let solutions = {
+    a: 0,
+    b: 0,
+    c: 0,
+    delta: 0,
+    s1: undefined,
+    s2: undefined
+};
 
 /////////
