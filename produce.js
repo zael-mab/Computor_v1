@@ -83,7 +83,7 @@ const reduceForm = (arr, degree) => {
         cal.total = 0;
 
         if (degree > 0) {
-            holder = holder.replace(/[X][\^]{0,1}[0-2]{0,1}/g, '1');
+            holder = holder.replace(/[X][\^]{0,1}[0-2]{0,1}/ig, '1');
         }
 
         for (let j = 0; j < holder.length; j++) {
@@ -98,15 +98,19 @@ const reduceForm = (arr, degree) => {
         }
         total += cal.total;
     });
-    let res;
+    let res = {
+        mult: undefined,
+        form: undefined
+    };
     if (degree == 1) {
-        res = total != 0 ? total.toString() + `*X` : '0';
-        // res = total != 0 ? total.toString() : '0';
+        res.form = total != 0 ? total.toString() + `*X` : '0';
+        res.mult = total != 0 ? total.toString() : '0';
     } else if (degree == 2) {
-        res = total != 0 ? total.toString() + `*X^${degree}` : '0';
-        // res = total != 0 ? total.toString() : '0';
+        res.form = total != 0 ? total.toString() + `*X^${degree}` : '0';
+        res.mult = total != 0 ? total.toString() : '0';
     } else {
-        res = total.toString();
+        res.form = total.toString();
+        res.mult = '1';
     }
     return (res);
 }

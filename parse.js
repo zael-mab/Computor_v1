@@ -21,7 +21,7 @@ const setData = (str) => {
     let parentheses = 0;
     const regex = /\*\s{0,}\/|\/\s{0,}\*|\/\s{0,}\/|\*\s{0,}\*/;
 
-    if (str.arr.match(regex) || str.arr.match(/[\+\-][\/\*]/g) || str.arr.match(/[\/]X/g)) {
+    if (str.arr.match(/[0-9]X/ig) || str.arr.match(regex) || str.arr.match(/[\+\-][\/\*]/g) || str.arr.match(/[\/]X/ig)) {
         console.log('Syntax Error');
         process.exit(1);
     }

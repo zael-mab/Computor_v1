@@ -101,30 +101,27 @@ const rev = (str) => {
 }
 
 struct.secondArray.arr = rev(struct.secondArray.arr);
-// struct.firstArray.arr = rev(struct.firstArray.arr);
 
 struct.firstArray.arr = struct.firstArray.arr.replace(/\s/g, '');;
 struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray.arr = struct.secondArray.arr.replace(/\s/g, '');;
 struct.secondArray = parse.setData(struct.secondArray);
 
-
+//////////
 console.log(struct.secondArray.arr);
 console.log(struct);
+/////////
 
-
-
-
-
+/////////////////////////////
 const reduce = require('./produce');
 
-struct.firstArray.x0 = reduce.reduceForm(struct.firstArray.x0, 0);
-struct.firstArray.x1 = reduce.reduceForm(struct.firstArray.x1, 1);
-struct.firstArray.x2 = reduce.reduceForm(struct.firstArray.x2, 2);
+struct.firstArray.x0 = reduce.reduceForm(struct.firstArray.x0, 0).form;
+struct.firstArray.x1 = reduce.reduceForm(struct.firstArray.x1, 1).form;
+struct.firstArray.x2 = reduce.reduceForm(struct.firstArray.x2, 2).form;
 ///////
-struct.secondArray.x0 = reduce.reduceForm(struct.secondArray.x0, 0);
-struct.secondArray.x1 = reduce.reduceForm(struct.secondArray.x1, 1);
-struct.secondArray.x2 = reduce.reduceForm(struct.secondArray.x2, 2);
+struct.secondArray.x0 = reduce.reduceForm(struct.secondArray.x0, 0).form;
+struct.secondArray.x1 = reduce.reduceForm(struct.secondArray.x1, 1).form;
+struct.secondArray.x2 = reduce.reduceForm(struct.secondArray.x2, 2).form;
 
 let newForm = {
     x0: [],
@@ -132,46 +129,35 @@ let newForm = {
     x2: []
 };
 
-// .concat('+' + struct.secondArray.x1)
-// let tmp = [];
-// tmp.push(struct.firstArray.x1);
-// struct.firstArray.x1 = tmp;
-// console.log(tmp);
-// const x1 = reduce.reduceForm(struct.firstArray.x1, 1);
-// console.log(x1);
 
 newForm.x0.push(struct.firstArray.x0, struct.secondArray.x0);
 newForm.x1.push(struct.firstArray.x1, struct.secondArray.x1);
 newForm.x2.push(struct.firstArray.x2, struct.secondArray.x2);
-console.log(newForm);
-newForm.x0 = reduce.reduceForm(newForm.x0, 0);
-newForm.x1 = reduce.reduceForm(newForm.x1, 1);
-newForm.x2 = reduce.reduceForm(newForm.x2, 2);
-console.log(newForm);
-// newForm.x0.push(correctSign(struct.firstArray.x0.concat('+' + struct.secondArray.x0)));
-// newForm.x1.push(correctSign());
-// newForm.x2.push(correctSign(struct.firstArray.x2.concat('+' + struct.secondArray.x2)));
 
+console.log(newForm);
+newForm.x0 = reduce.reduceForm(newForm.x0, 0).form;
+newForm.x1 = reduce.reduceForm(newForm.x1, 1).mult;
+newForm.x2 = reduce.reduceForm(newForm.x2, 2).mult;
+console.log(newForm);
 
 //////
 
-// console.log(newForm);
-// newForm.x0 = reduce.reduceForm(newForm.x0, 0);
-// newForm.x1 = reduce.reduceForm(newForm.x1, 1);
-// newForm.x2 = reduce.reduceForm(newForm.x2, 2);
 
-// if (parseInt(reducedForm.x2) === 0) {
-//     reducedForm.x2 = '';
-// }
 
-// struct.reducedForm = newForm.x0 + ' + ' + newForm.x1 + ' + ' + newForm.x2 + ' = 0';
-// struct.reducedForm = correctSign(struct.reducedForm);
-// console.log(newForm);
+
+
+if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0){
+    struct.reducedForm = '0 = 0';
+}else {
+    struct.reducedForm = (newForm.x0 != 0 ? newForm.x0  : '') + (newForm.x1 != 0 ? ' + ' + newForm.x1 + ' * X': '') + (newForm.x2 != 0 ?' + ' + newForm.x2+ ' * X^2' : '') + ' = 0';
+    struct.reducedForm = correctSign(struct.reducedForm);
+}
+console.log(newForm);
 
 // //*******************Console***********************//
-// console.log('Reduced form: ' + struct.reducedForm);
-// const degree = struct.firstArray.degree > struct.secondArray.degree ? struct.firstArray.degree : struct.secondArray.degree;
-// console.log(`Polynomial degree: ${degree}`);
+console.log('Reduced form: ' + struct.reducedForm);
+const degree = (newForm.x2 != 0 ? 2 : (newForm.x1 != 0 ? 1 : 0));
+console.log(`Polynomial degree: ${degree}`);
 // //******************************************//
 
 // Solutions
@@ -184,4 +170,17 @@ let solutions = {
     s2: undefined
 };
 
+if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
+    console.log (`There is no solution for this equation { Ø empty set } .`);
+    process.exit(1);
+}else if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0){
+    console.log (`There are infinite solutions for this equation ∞.`);
+    process.exit(1);
+}else if (newForm.x1 != 0 && newForm.x2 == 0 && newForm.x0 == 0){
+    console.log('The solution is:\n0');
+}else if (newForm.x1 != 0 && newForm.x0 != 0 && newForm.x2 == 0){
+    let tmp = [];
+    tmp.push (newForm.x0.concat('/-'+newForm.x1));
+    console.log (`The solution is:\n${reduce.reduceForm(tmp).form}`);
+}
 /////////
