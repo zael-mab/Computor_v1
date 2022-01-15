@@ -64,14 +64,7 @@ const setData = (str) => {
                 continue;
             tmp = str.arr.slice(j, i).trim();
             let d = degree(tmp);
-            // str.par.push(tmp);
-            if (d == 0) {
-                str.x0.push(tmp);
-            } else if (d == 1) {
-                str.x1.push(tmp);
-            } else if (d == 2) {
-                str.x2.push(tmp);
-            }
+            str[`x${d}`].push(tmp);
             str.degree = d > str.degree ? d : str.degree;
             // console.log(tmp,'|', i, j, `D = ${d}`);
             j = i;
@@ -106,6 +99,9 @@ const calculate = (x, y, sign) => {
     if (!x | !y) {
         console.log('E');
         process.exit(1);
+    }
+    if ((x == 0 || y == 0) && sign === '*'){
+        return 0;
     }
     if ((x === 0 || y === 0) && sign === '/') {
         console.log('Error devision by 0');

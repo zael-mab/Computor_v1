@@ -29,7 +29,10 @@ const operat = (cal, holder, j) => {
         cal.y = parse.calculate(cal.y, factor, '*');
 
         if (cal.oper != undefined) {
-            cal.total += parse.calculate(cal.x, cal.y, cal.oper);
+            if ((cal.x == 0 || cal.y == 0) && cal.oper == '*')
+                cal.total = parse.calculate(cal.x, cal.y, cal.oper);
+            else
+                cal.total += parse.calculate(cal.x, cal.y, cal.oper);
             cal = init(cal);
             cal.oper = undefined;
         } else {
@@ -82,21 +85,24 @@ const reduceForm = (arr, degree) => {
         cal.total = 0;
 
         if (degree > 0) {
-            holder = holder.replace(/[X][\^]{0,1}[0-2]{0,1}/ig, '1');
+            holder = holder.replace(/[X][\^]{0,1}[0-3]{0,1}/ig, '1');
+        }
+        if (!holder.match(/[*]{0,1}[0][*]{0,1}/g)){
+            for (let j = 0; j < holder.length; j++) {
+                cal = operat(cal, holder, j);
+            }
+    
+            if (cal.x && !cal.y && !cal.oper) {
+                cal.x = parse.calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
+                cal.total += cal.x;
+                cal.xSign = undefined;
+                cal.x = undefined;
+            }
+            total += cal.total;
         }
 
-        for (let j = 0; j < holder.length; j++) {
-            cal = operat(cal, holder, j);
-        }
-
-        if (cal.x && !cal.y && !cal.oper) {
-            cal.x = parse.calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-            cal.total += cal.x;
-            cal.xSign = undefined;
-            cal.x = undefined;
-        }
-        total += cal.total;
     });
+    
     let res = {
         mult: undefined,
         form: undefined
@@ -104,13 +110,14 @@ const reduceForm = (arr, degree) => {
     if (degree == 1) {
         res.form = total != 0 ? total.toString() + `*X` : '0';
         res.mult = total != 0 ? total.toString() : '0';
-    } else if (degree == 2) {
+    } else if (degree >= 2) {
         res.form = total != 0 ? total.toString() + `*X^${degree}` : '0';
         res.mult = total != 0 ? total.toString() : '0';
     } else {
         res.form = total.toString();
         res.mult = '1';
     }
+    
     return (res);
 }
 

@@ -13,7 +13,8 @@ let struct = {
         par: [],
         x0: [],
         x1: [],
-        x2: []
+        x2: [],
+        x3: []
     },
     secondArray: {
         degree: 0,
@@ -21,7 +22,8 @@ let struct = {
         par: [],
         x0: [],
         x1: [],
-        x2: []
+        x2: [],
+        x3: []
     }
 };
 
@@ -61,9 +63,9 @@ if (!f[0].replace(/\s/g, '') && (!(f[1].replace(/\s/g, ''))) ){
 /////////////////// match
 
 // extract Xˆe from string
-const regex1 = /X[\^]?[0-2]{0,}/gi;
+const regex1 = /X[\^]?[0-3]{0,}/gi;
 // check Xˆe format
-const regex2 = /^X[\^][0-2]{1}$|^X$/i;
+const regex2 = /^X[\^][0-3]{1}$|^X$/i;
 // check sting 
 const regex3 = /^[^a-wy-z<>%@#&!_,]+$/ig;
 
@@ -116,7 +118,6 @@ struct.firstArray = parse.setData(struct.firstArray);
 struct.secondArray = parse.setData(struct.secondArray);
 
 //////////
-console.log(struct.secondArray.arr);
 console.log(struct);
 /////////
 
@@ -126,26 +127,32 @@ const reduce = require('./produce');
 struct.firstArray.x0 = reduce.reduceForm(struct.firstArray.x0, 0).form;
 struct.firstArray.x1 = reduce.reduceForm(struct.firstArray.x1, 1).form;
 struct.firstArray.x2 = reduce.reduceForm(struct.firstArray.x2, 2).form;
+struct.firstArray.x3 = reduce.reduceForm(struct.firstArray.x3, 3).form;
 ///////
 struct.secondArray.x0 = reduce.reduceForm(struct.secondArray.x0, 0).form;
 struct.secondArray.x1 = reduce.reduceForm(struct.secondArray.x1, 1).form;
 struct.secondArray.x2 = reduce.reduceForm(struct.secondArray.x2, 2).form;
+struct.secondArray.x3 = reduce.reduceForm(struct.secondArray.x3, 3).form;
 
+///////////////////////////
 let newForm = {
     x0: [],
     x1: [],
-    x2: []
+    x2: [],
+    x3: []
 };
 
 
 newForm.x0.push(struct.firstArray.x0, struct.secondArray.x0);
 newForm.x1.push(struct.firstArray.x1, struct.secondArray.x1);
 newForm.x2.push(struct.firstArray.x2, struct.secondArray.x2);
+newForm.x3.push(struct.firstArray.x3, struct.secondArray.x3);
 
 console.log(newForm);
 newForm.x0 = reduce.reduceForm(newForm.x0, 0).form;
 newForm.x1 = reduce.reduceForm(newForm.x1, 1).mult;
 newForm.x2 = reduce.reduceForm(newForm.x2, 2).mult;
+newForm.x3 = reduce.reduceForm(newForm.x3, 3).mult;
 console.log(newForm);
 
 //////
@@ -157,26 +164,33 @@ console.log(newForm);
 if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0){
     struct.reducedForm = '0 = 0';
 }else {
-    struct.reducedForm = (newForm.x0 != 0 ? newForm.x0  : '') + (newForm.x1 != 0 ? ' + ' + newForm.x1 + ' * X': '') + (newForm.x2 != 0 ?' + ' + newForm.x2+ ' * X^2' : '') + ' = 0';
+    struct.reducedForm = (newForm.x0 != 0 ? newForm.x0  : '') + (newForm.x1 != 0 ? ' + ' + newForm.x1 + ' * X': '') + (newForm.x2 != 0 ?' + ' + newForm.x2+ ' * X^2' : '') + (newForm.x3 != 0 ?' + ' + newForm.x3+ ' * X^3' : '') + ' = 0';
     struct.reducedForm = correctSign(struct.reducedForm);
 }
 console.log(newForm);
 
 // //*******************Console***********************//
 console.log('Reduced form: ' + struct.reducedForm);
-const degree = (newForm.x2 != 0 ? 2 : (newForm.x1 != 0 ? 1 : 0));
+const degree = (newForm.x3 != 0 ? 3 : (newForm.x2 != 0 ? 2 : (newForm.x1 != 0 ? 1 : 0)));
 console.log(`Polynomial degree: ${degree}`);
+if (degree > 2){
+    console.log ('I can\'t solve this equation !');
+    process.exit(1);
+}
 // //******************************************//
 
 // Solutions
-let solutions = {
-    a: 0,
-    b: 0,
-    c: 0,
-    delta: 0,
-    s1: undefined,
-    s2: undefined
-};
+// let tmp = [];
+// tmp.push( `+4*${newForm.x2}*${newForm.x0}`, `${newForm.x1}*${newForm.x1}`);
+// console.log(tmp);
+// let solutions = {
+//     a: newForm.x2,
+//     b: newForm.x1,
+//     c: newForm.x2,
+//     delta: reduce.reduceForm( tmp, 0),
+//     s1: undefined,
+//     s2: undefined
+// };
 
 if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     console.log (`There is no solution for this equation { Ø empty set } .`);
@@ -191,6 +205,7 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     tmp.push(newForm.x0.concat('/-'+newForm.x1));
     console.log(`The solution is:\n${tmp[0]} = ${reduce.reduceForm(tmp).form}`);
 }else if (newForm.x2 != 0){
-    console.log('2');
+    console.log(solutions);
+    
 }
 /////////
