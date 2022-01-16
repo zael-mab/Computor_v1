@@ -122,4 +122,18 @@ const reduceForm = (arr, degree) => {
 }
 
 
-module.exports = { reduceForm };
+
+const sqrRoot = (nb) =>{
+    let sqrt = 1;
+    let i = 0;
+    while (true){
+        sqrt = (nb / sqrt + sqrt) /2;
+        i++;
+        if (i == nb + 1)
+            break ;
+    }
+    return sqrt;
+};
+
+
+module.exports = { reduceForm , sqrRoot};

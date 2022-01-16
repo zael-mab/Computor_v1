@@ -180,17 +180,19 @@ if (degree > 2){
 // //******************************************//
 
 // Solutions
-// let tmp = [];
-// tmp.push( `+4*${newForm.x2}*${newForm.x0}`, `${newForm.x1}*${newForm.x1}`);
-// console.log(tmp);
-// let solutions = {
-//     a: newForm.x2,
-//     b: newForm.x1,
-//     c: newForm.x2,
-//     delta: reduce.reduceForm( tmp, 0),
-//     s1: undefined,
-//     s2: undefined
-// };
+let tmp = [];
+tmp.push( `-4*${newForm.x2}*${newForm.x0}`, `${newForm.x1}*${newForm.x1}`);
+console.log(tmp);
+let solutions = {
+    a: newForm.x2,
+    b: newForm.x1,
+    c: newForm.x0,
+    delta: parseFloat(reduce.reduceForm( tmp, 0).form),
+    s1: undefined,
+    s2: undefined
+};
+
+// const delta = solutions.delta
 
 if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     console.log (`There is no solution for this equation { Ø empty set } .`);
@@ -209,3 +211,8 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     
 }
 /////////
+
+
+const nb = solutions.delta;
+// console.log(Math.sqrt(solutions.delta));
+console.log(reduce.sqrRoot(nb));
