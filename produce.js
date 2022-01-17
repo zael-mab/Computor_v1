@@ -124,16 +124,81 @@ const reduceForm = (arr, degree) => {
 
 
 const sqrRoot = (nb) =>{
-    let sqrt = 1;
-    let i = 0;
-    while (true){
-        sqrt = (nb / sqrt + sqrt) /2;
-        i++;
-        if (i == nb/2 + 1 || (sqrt * sqrt) == nb)
-            break ;
+    let sqr = nb /2;
+    let tmp = 0;
+    while (tmp != sqr){
+        tmp = sqr;
+        console.log (tmp);
+        sqr = (nb / tmp + tmp )/2;
+        console.log (sqr);
     }
-    return sqrt;
+    return sqr;
 };
 
+// const sqrRoot = (nb) =>{
+//     let sqrt = 1;
+//     let i = 0;
+//     while (true){
+//         sqrt = (nb / sqrt + sqrt) /2;
+//         i++;
+//         if (i == nb/2 + 1 || (sqrt * sqrt) == nb)
+//             break ;
+//     }
+//     return sqrt;
+// };
 
-module.exports = { reduceForm , sqrRoot};
+
+function Square(n, i, j)
+{
+    var mid = ((i + j) / 2);
+    var mul = mid * mid;
+ 
+    // If mid itself is the square root,
+    // return mid
+    if ((mul == n) || (Math.abs(mul - n) < 0.00001))
+        return mid;
+ 
+    // If mul is less than n,
+    // recur second half
+    else if (mul < n)
+        return Square(n, mid, j);
+ 
+    // Else recur first half
+    else
+        return Square(n, i, mid);
+}
+ 
+// Function to find the square root of n
+function findSqrt(n)
+{
+    var i = 1;
+ 
+    // While the square root is not found
+    var found = false;
+    while (!found)
+    {
+         
+        // If n is a perfect square
+        if (i * i == n)
+        {
+            // document.write(i);
+            return i;
+            found = true;
+        }
+ 
+        else if (i * i > n)
+        {
+             
+            // Square root will lie in the
+            // interval i-1 and i
+            var res = Square(n, i - 1, i);
+            // document.write(res.toFixed(5));
+            return res;
+            found = true;
+        }
+        i++;
+    }
+}
+ 
+
+module.exports = { reduceForm , sqrRoot, findSqrt};

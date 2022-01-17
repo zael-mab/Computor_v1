@@ -194,6 +194,7 @@ let solutions = {
     s2: undefined
 };
 
+console.log(reduce.findSqrt( solutions.delta));
 console.log(solutions);
 
 // solutions.delta = reduce.sqrRoot(solutions.delta);
@@ -218,7 +219,9 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
         solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
         console.log (`Discriminant is strictly positive, the two solutions are :\nS1 :${solutions.s1}\nS2 :${solutions.s2}`);
     }else if (solutions.delta === 0){
-        console.log(`S :\n`);
+        solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
+        console.log(`Discriminant = 0\nS :${solutions.s2}`);
+
     }else if (solutions.delta < 0){
         console.log('complex solutions');
         const d =  reduce.sqrRoot(-solutions.delta) / (2 * solutions.a);
