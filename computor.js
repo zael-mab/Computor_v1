@@ -148,12 +148,12 @@ newForm.x1.push(struct.firstArray.x1, struct.secondArray.x1);
 newForm.x2.push(struct.firstArray.x2, struct.secondArray.x2);
 newForm.x3.push(struct.firstArray.x3, struct.secondArray.x3);
 
-console.log(newForm);
+// console.log(newForm);
 newForm.x0 = reduce.reduceForm(newForm.x0, 0).form;
 newForm.x1 = reduce.reduceForm(newForm.x1, 1).mult;
 newForm.x2 = reduce.reduceForm(newForm.x2, 2).mult;
 newForm.x3 = reduce.reduceForm(newForm.x3, 3).mult;
-console.log(newForm);
+// console.log(newForm);
 
 //////
 
@@ -164,10 +164,10 @@ console.log(newForm);
 if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0){
     struct.reducedForm = '0 = 0';
 }else {
-    struct.reducedForm = (newForm.x0 != 0 ? newForm.x0  : '') + (newForm.x1 != 0 ? ' + ' + newForm.x1 + ' * X': '') + (newForm.x2 != 0 ?' + ' + newForm.x2+ ' * X^2' : '') + (newForm.x3 != 0 ?' + ' + newForm.x3+ ' * X^3' : '') + ' = 0';
+    struct.reducedForm = (newForm.x0 != 0 ? newForm.x0 + ' + ' : '') + (newForm.x1 != 0 ?  newForm.x1 + ' * X': '') + (newForm.x2 != 0 ?' + ' + newForm.x2+ ' * X^2' : '') + (newForm.x3 != 0 ?' + ' + newForm.x3+ ' * X^3' : '') + ' = 0';
     struct.reducedForm = correctSign(struct.reducedForm);
 }
-console.log(newForm);
+// console.log(newForm);
 
 // //*******************Console***********************//
 console.log('Reduced form: ' + struct.reducedForm);
@@ -181,19 +181,22 @@ if (degree > 2){
 
 // Solutions
 let tmp = [];
-tmp.push( `-4*${newForm.x2}*${newForm.x0}`, `${newForm.x1}*${newForm.x1}`);
-console.log(tmp);
+tmp.push(`${newForm.x1}*${newForm.x1}`, `-4*${newForm.x2}*${newForm.x0}`);
+// console.log (tmp);
+// tmp = reduce.reduceForm(tmp, 0).form;
+// console.log (tmp);
 let solutions = {
-    a: newForm.x2,
-    b: newForm.x1,
-    c: newForm.x0,
-    delta: parseFloat(reduce.reduceForm( tmp, 0).form),
+    a: parseFloat(newForm.x2),
+    b: parseFloat(newForm.x1),
+    c: parseFloat(newForm.x0),
+    delta: (parseFloat(reduce.reduceForm(tmp, 0).form)),
     s1: undefined,
     s2: undefined
 };
 
-// const delta = solutions.delta
+console.log(solutions);
 
+// solutions.delta = reduce.sqrRoot(solutions.delta);
 if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     console.log (`There is no solution for this equation { Ø empty set } .`);
     process.exit(1);
@@ -203,16 +206,27 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
 }else if (newForm.x1 != 0 && newForm.x2 == 0 && newForm.x0 == 0){
     console.log('The solution is:\n0');
 }else if (newForm.x1 != 0 && newForm.x0 != 0 && newForm.x2 == 0){
+
     let tmp = [];
     tmp.push(newForm.x0.concat('/-'+newForm.x1));
+    tmp[0] = correctSign(tmp[0]);
     console.log(`The solution is:\n${tmp[0]} = ${reduce.reduceForm(tmp).form}`);
+
 }else if (newForm.x2 != 0){
-    console.log(solutions);
+    if (solutions.delta > 0){
+        solutions.s1 = (-solutions.b + reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
+        solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
+        console.log (`Discriminant is strictly positive, the two solutions are :\nS1 :${solutions.s1}\nS2 :${solutions.s2}`);
+    }else if (solutions.delta === 0){
+        console.log(`S :\n`);
+    }else if (solutions.delta < 0){
+        console.log('complex solutions');
+        const d =  reduce.sqrRoot(-solutions.delta) / (2 * solutions.a);
+        const x = -solutions.b / (2 * solutions.a);
+        console.log (`${d}i  ${x}`);
+    }
     
 }
 /////////
 
-
-const nb = solutions.delta;
-// console.log(Math.sqrt(solutions.delta));
-console.log(reduce.sqrRoot(nb));
+// -b+√Delta / 2a

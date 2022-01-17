@@ -79,27 +79,27 @@ const reduceForm = (arr, degree) => {
 
     arr.forEach(element => {
         holder = element.slice();
-
         cal.index = 0;
         cal = init(cal);
         cal.total = 0;
-
+        
         if (degree > 0) {
             holder = holder.replace(/[X][\^]{0,1}[0-3]{0,1}/ig, '1');
         }
-        if (!holder.match(/[*]{0,1}[0][*]{0,1}/g)){
+        // if (!holder.match(/[*]{0,1}[0][*]{0,1}/g)){
             for (let j = 0; j < holder.length; j++) {
                 cal = operat(cal, holder, j);
             }
-    
+            
             if (cal.x && !cal.y && !cal.oper) {
                 cal.x = parse.calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
                 cal.total += cal.x;
                 cal.xSign = undefined;
                 cal.x = undefined;
             }
+            // console.log ('holder' + holder, cal.total, total);
             total += cal.total;
-        }
+        // }
 
     });
     
@@ -129,7 +129,7 @@ const sqrRoot = (nb) =>{
     while (true){
         sqrt = (nb / sqrt + sqrt) /2;
         i++;
-        if (i == nb + 1)
+        if (i == nb/2 + 1 || (sqrt * sqrt) == nb)
             break ;
     }
     return sqrt;
