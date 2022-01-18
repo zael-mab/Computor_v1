@@ -6,24 +6,11 @@
 
 // set a structure
 let struct = {
-    reducedForm: '',
     firstArray: {
-        degree: 0,
-        arr: '',
-        par: [],
-        x0: [],
-        x1: [],
-        x2: [],
-        x3: []
+        arr: ''
     },
     secondArray: {
-        degree: 0,
-        arr: '',
-        par: [],
-        x0: [],
-        x1: [],
-        x2: [],
-        x3: []
+        arr: ''
     },
 };
 
@@ -170,92 +157,61 @@ struct.secondArray = parse.setData(struct.secondArray, headNode);
 
 const reduce = require('./produce');
 
+//////////////////
+
+let newForm = {
+    x0: [],
+    x1: [],
+    x2: []
+};
+
 const toto = (head) => {
     let string = '';
     let temp = head.next;
+    
     while (temp){
         const holder = [];
         holder.push(reduce.reduceForm(temp.data, temp.degree));
     
         if (holder[0].form != '0'){
-            if (temp.degree > 1)
+            head.degree = head.degree > temp.degree ? head.degree : temp.degree;
+            if (temp.degree > 1){
                 string = `${string} + ${holder[0].mult} * X^${temp.degree}`;
-            else if (temp.degree == 1)
+                if (temp.degree == 2){
+                    newForm.x2 = holder[0].mult;
+                }
+            }
+            else if (temp.degree == 1){
                 string = `${string} + ${holder[0].mult} * X`;
-            else
+                newForm.x1 = holder[0].mult;
+            }
+            else{
                 string = `${string} + ${holder[0].form}`;
+                newForm.x0 = holder[0].form;
+            }
         }
      
         temp.data = holder;
         temp = temp.next;
     }
+    
     string = correctSign(string) + ' = 0';
     return string;
 }
-
+//////////////
 const reString = toto(headNode);
-console.log(`reSting : ${reString}`);
+console.log(`reSting : ${reString}, ${headNode.degree}`);
 cont(headNode);
 
 //////////
 console.log(struct);
-/////////
-
-/////////////////////////////
-
-struct.firstArray.x0 = reduce.reduceForm(struct.firstArray.x0, 0).form;
-struct.firstArray.x1 = reduce.reduceForm(struct.firstArray.x1, 1).form;
-struct.firstArray.x2 = reduce.reduceForm(struct.firstArray.x2, 2).form;
-struct.firstArray.x3 = reduce.reduceForm(struct.firstArray.x3, 3).form;
-///////
-struct.secondArray.x0 = reduce.reduceForm(struct.secondArray.x0, 0).form;
-struct.secondArray.x1 = reduce.reduceForm(struct.secondArray.x1, 1).form;
-struct.secondArray.x2 = reduce.reduceForm(struct.secondArray.x2, 2).form;
-struct.secondArray.x3 = reduce.reduceForm(struct.secondArray.x3, 3).form;
-
-///////////////////////////
-let newForm = {
-    x0: [],
-    x1: [],
-    x2: [],
-    x3: []
-};
-
-
-newForm.x0.push(struct.firstArray.x0, struct.secondArray.x0);
-newForm.x1.push(struct.firstArray.x1, struct.secondArray.x1);
-newForm.x2.push(struct.firstArray.x2, struct.secondArray.x2);
-newForm.x3.push(struct.firstArray.x3, struct.secondArray.x3);
-
-// console.log(newForm);
-newForm.x0 = reduce.reduceForm(newForm.x0, 0).form;
-newForm.x1 = reduce.reduceForm(newForm.x1, 1).mult;
-newForm.x2 = reduce.reduceForm(newForm.x2, 2).mult;
-newForm.x3 = reduce.reduceForm(newForm.x3, 3).mult;
-// console.log(newForm);
-
-//////
-
-
-
-
-
-if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0){
-    struct.reducedForm = '0 = 0';
-}else {
-    struct.reducedForm = (newForm.x0 != 0 ? newForm.x0 + ' + ' : '') + (newForm.x1 != 0 ?  newForm.x1 + ' * X': '') + (newForm.x2 != 0 ?' + ' + newForm.x2+ ' * X^2' : '') + (newForm.x3 != 0 ?' + ' + newForm.x3+ ' * X^3' : '') + ' = 0';
-    struct.reducedForm = correctSign(struct.reducedForm);
-}
-// console.log(newForm);
-
 
 
 
 // //*******************Console***********************//
-console.log('Reduced form: ' + struct.reducedForm);
-const degree = (newForm.x3 != 0 ? 3 : (newForm.x2 != 0 ? 2 : (newForm.x1 != 0 ? 1 : 0)));
-console.log(`Polynomial degree: ${degree}`);
-if (degree > 2){
+console.log('Reduced form: ' + reString);
+console.log(`Polynomial degree: ${headNode.degree}`);
+if (headNode.degree > 2){
     console.log ('I can\'t solve this equation !');
     process.exit(1);
 }
@@ -269,7 +225,7 @@ let solutions = {
     a: parseFloat(newForm.x2),
     b: parseFloat(newForm.x1),
     c: parseFloat(newForm.x0),
-    delta: (parseFloat(reduce.reduceForm(tmp, 0).form)),
+    delta: parseFloat(reduce.reduceForm(tmp, 0).form),
     s1: undefined,
     s2: undefined
 };
@@ -285,6 +241,8 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     process.exit(1);
 }else if (newForm.x1 != 0 && newForm.x2 == 0 && newForm.x0 == 0){
     console.log('The solution is:\n0');
+
+
 }else if (newForm.x1 != 0 && newForm.x0 != 0 && newForm.x2 == 0){
 
     let tmp = [];
@@ -293,10 +251,12 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     console.log(`The solution is:\n${tmp[0]} = ${reduce.reduceForm(tmp).form}`);
 
 }else if (newForm.x2 != 0){
+
     if (solutions.delta > 0){
         solutions.s1 = (-solutions.b + reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
         solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
         console.log (`Discriminant is strictly positive, the two solutions are :\nS1 :${solutions.s1}\nS2 :${solutions.s2}`);
+
     }else if (solutions.delta === 0){
         solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
         console.log(`Discriminant = 0\nS :${solutions.s2}`);
@@ -305,15 +265,9 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
         console.log('complex solutions');
         const d =  reduce.sqrRoot(-solutions.delta) / (2 * solutions.a);
         const x = -solutions.b / (2 * solutions.a);
-        console.log (`${d}i  ${x}`);
+        console.log (`${x} + ${d}i`);
+        console.log (`${x} - ${d}i`);
     }
     
 }
-/////////
-
-
-// let node0 = new Node(['1+0'], 0, null);
-// node0 = new head(node0);
-
-
 

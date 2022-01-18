@@ -24,11 +24,10 @@ function add(head, data, d){
 }
 
 function lookUp(head, data, d){
-    let temp = head;
+    let temp = head.next;
     while(temp){
         if (temp.degree == d){
             temp.data.push(data);
-            // console.log(d);
             return ;
         }
         temp = temp.next;
@@ -38,9 +37,9 @@ function lookUp(head, data, d){
 
 
 // extract Xˆe from string
-const regex1 = /X[\^]?[0-3]{0,}/gi;
+const regex1 = /X[\^]?[0-9]{0,}/gi;
 // check Xˆe format
-const regex2 = /^X[\^][0-3]{1}$|^X$/i;
+const regex2 = /^X[\^][0-9]{1}$|^X$/i;
 
 const checkSyntax = (arr) => {
 
@@ -109,8 +108,8 @@ const setData = (str, head) => {
             tmp = str.arr.slice(j, i).trim();
             let d = degree(tmp);
             lookUp(head, tmp, d);
-            str[`x${d}`].push(tmp);
-            str.degree = d > str.degree ? d : str.degree;
+            // str[`x${d}`].push(tmp);
+            // str.degree = d > str.degree ? d : str.degree;
             // console.log(tmp,'|', i, j, `D = ${d}`);
             j = i;
         }

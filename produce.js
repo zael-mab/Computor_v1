@@ -84,7 +84,7 @@ const reduceForm = (arr, degree) => {
         cal.total = 0;
         
         if (degree > 0) {
-            holder = holder.replace(/[X][\^]{0,1}[0-3]{0,1}/ig, '1');
+            holder = holder.replace(/[X][\^]{0,1}[0-9]{0,1}/ig, '1');
         }
         // if (!holder.match(/[*]{0,1}[0][*]{0,1}/g)){
             for (let j = 0; j < holder.length; j++) {
