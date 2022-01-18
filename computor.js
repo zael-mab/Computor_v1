@@ -24,9 +24,38 @@ let struct = {
         x1: [],
         x2: [],
         x3: []
-    }
+    },
 };
 
+///////////////////////////
+function Node(data, degree, next){
+    this.data = [];
+    this.data.push(data);
+    this.degree = degree;
+    this.next = next;
+};
+
+function head(head){
+    this.head = head;
+};
+
+
+function add(head, data, d){
+    let node = new Node(data, d, null);
+    if (!head.next){
+        head.next = node;
+    }else{
+        let tmp = head.next;
+        while (tmp.next){
+            tmp = tmp.next;
+        }
+        tmp.next = node;
+    }
+}
+
+let headNode = new Node (null, -1, null);
+new head(head);
+///////////////////////
 
 // check if the arguments
 var arr = [];
@@ -114,8 +143,10 @@ struct.secondArray.arr = struct.secondArray.arr.replace(/\s/g, '');;
 //     console.log ('Error');
 //     process.exit (1);
 // }
-struct.firstArray = parse.setData(struct.firstArray);
-struct.secondArray = parse.setData(struct.secondArray);
+
+
+struct.firstArray = parse.setData(struct.firstArray, headNode);
+struct.secondArray = parse.setData(struct.secondArray, headNode);
 
 //////////
 console.log(struct);
@@ -182,9 +213,7 @@ if (degree > 2){
 // Solutions
 let tmp = [];
 tmp.push(`${newForm.x1}*${newForm.x1}`, `-4*${newForm.x2}*${newForm.x0}`);
-// console.log (tmp);
-// tmp = reduce.reduceForm(tmp, 0).form;
-// console.log (tmp);
+
 let solutions = {
     a: parseFloat(newForm.x2),
     b: parseFloat(newForm.x1),
@@ -194,7 +223,6 @@ let solutions = {
     s2: undefined
 };
 
-console.log(reduce.findSqrt( solutions.delta));
 console.log(solutions);
 
 // solutions.delta = reduce.sqrRoot(solutions.delta);
@@ -232,4 +260,20 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
 }
 /////////
 
-// -b+√Delta / 2a
+
+// let node0 = new Node(['1+0'], 0, null);
+// node0 = new head(node0);
+
+
+const cont = function(head){
+    // console.log(head);
+    let temp = head;
+    while (temp){
+        console.log(temp);
+        temp = temp.next;
+    }
+}
+
+
+cont(headNode);
+

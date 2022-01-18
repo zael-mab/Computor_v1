@@ -1,3 +1,44 @@
+function Node(data, degree, next){
+    this.data = []
+    this.data.push(data);
+    this.degree = degree;
+    this.next = next;
+};
+
+function head(head){
+    this.head = head;
+};
+
+
+function add(head, data, d){
+    let node = new Node(data, d, null);
+    if (!head.next){
+        head.next = node;
+    }else{
+        let tmp = head.next;
+        while (tmp.next){
+            tmp = tmp.next;
+        }
+        tmp.next = node;
+    }
+}
+
+function lookUp(head, data, d){
+    let temp = head;
+    while(temp){
+        if (temp.degree == d){
+            temp.data.push(data);
+            // console.log(d);
+            return ;
+        }
+        temp = temp.next;
+    }
+    new add(head, data, d);
+}
+
+
+
+
 const checkSyntax = (regex1, regex2, arr) => {
 
     const matches = arr.match(regex1);
@@ -16,7 +57,7 @@ const checkSyntax = (regex1, regex2, arr) => {
 };
 
 //////////////////////////////
-const setData = (str) => {
+const setData = (str, head) => {
     let j = 0;
     let parentheses = 0;
     const regex = /\*\s{0,}\/|\/\s{0,}\*|\/\s{0,}\/|\*\s{0,}\*/;
@@ -64,6 +105,7 @@ const setData = (str) => {
                 continue;
             tmp = str.arr.slice(j, i).trim();
             let d = degree(tmp);
+            lookUp(head, tmp, d);
             str[`x${d}`].push(tmp);
             str.degree = d > str.degree ? d : str.degree;
             // console.log(tmp,'|', i, j, `D = ${d}`);
