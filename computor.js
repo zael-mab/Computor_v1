@@ -44,8 +44,8 @@ function add(head, data, d){
 
 let headNode = new Node (null, -1, null);
 new head(head);
+
 const cont = function(head){
-    // console.log(head);
     let temp = head.next;
     while (temp){
         console.log(temp.data);
@@ -53,25 +53,38 @@ const cont = function(head){
     }
 }
 
-
 ////////////////////////////////////////////////////////////////
 
 
-
-
+///////////////////////////////////
+const rev = (str) => {
+    if (!str.match(/^[\-\+]/)) {
+        str = '+'.concat(str);
+    }
+    str = str.replace(/[\+]/g, '$');
+    str = str.replace(/[\-]/g, '!');
+    str = str.replace(/[\$]/g, '-');
+    str = str.replace(/[\!]/g, '+');
+    return str;
+}
+///////////////////////////////////
+let argv = process.argv[2];
 //  /////////////////////////////////////////////////////////
 
-// check if the arguments
-var arr = [];
+// check arguments
 if (process.argv.length > 3) {
     console.log(`Error to many args...`);
     process.exit(1);
 } else if (process.argv.length == 2) {
     console.log('Error, please add an argument');
     process.exit(1);
+}else if (process.argv[2].trim().length === 0){
+    console.log('Error, string empty');
+    process.exit(1);
 }
 
 
+var arr = [];
 //////////// get the equation from the argument
 for (let i = 2; i < process.argv.length; i++) {
     arr.push(process.argv[i]);
@@ -87,14 +100,11 @@ if (f.length == 2) {
     struct.firstArray.arr = f[0].trim();
     struct.secondArray.arr = '0';
 }
-// console.log (f)
+
 if (!f[0].replace(/\s/g, '') && (!(f[1].replace(/\s/g, ''))) ){
     console.log ('Syntax Error');
     process.exit(1);
 }
-
-/////////////////// match
-
 
 // check sting 
 const regex3 = /^[^a-wy-z<>%@#&!_,]+$/ig;
@@ -107,7 +117,6 @@ if (arr[0].match(regex3) === null) {
 const parse = require('./parse');
 
 
-//
 parse.checkSyntax(arr[0]);
 
 const correctSign = (str) => {
@@ -129,18 +138,6 @@ struct.secondArray.arr = correctSign(struct.secondArray.arr);
 
 
 
-///////////////////////////////////
-const rev = (str) => {
-    if (!str.match(/^[\-\+]/)) {
-        str = '+'.concat(str);
-    }
-    str = str.replace(/[\+]/g, '$');
-    str = str.replace(/[\-]/g, '!');
-    str = str.replace(/[\$]/g, '-');
-    str = str.replace(/[\!]/g, '+');
-    return str;
-}
-///////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
 struct.secondArray.arr = rev(struct.secondArray.arr);
@@ -165,7 +162,7 @@ let newForm = {
     x2: []
 };
 
-const toto = (head) => {
+const setNewForm = (head) => {
     let string = '';
     let temp = head.next;
     
@@ -198,13 +195,9 @@ const toto = (head) => {
     string = correctSign(string) + ' = 0';
     return string;
 }
-//////////////
-const reString = toto(headNode);
-console.log(`reSting : ${reString}, ${headNode.degree}`);
-cont(headNode);
 
-//////////
-console.log(struct);
+const reString = setNewForm(headNode);
+
 
 
 
@@ -230,7 +223,7 @@ let solutions = {
     s2: undefined
 };
 
-console.log(solutions);
+
 
 // solutions.delta = reduce.sqrRoot(solutions.delta);
 if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){

@@ -87,18 +87,6 @@ const setData = (str, head) => {
             }
         }
 
-        // ///////////////
-        // if (str.arr[i] === '('){
-        //     p = i;
-        // }
-        // if (str.arr[i] === ')'){
-        //     const holder = str.arr.slice(p, i + 1).trim();
-        //     str.par.push(holder);
-        //     p = 0;
-        //     console.log (`holder\t${holder}`);
-        // }
-
-        // ////////////////
         if ((str.arr[i] === '+' || str.arr[i] === '-' || i === str.arr.length) &&
             (str.arr[i - 1] !== '/' && str.arr[i - 1] !== '*')) {
             let tmp;
@@ -108,9 +96,6 @@ const setData = (str, head) => {
             tmp = str.arr.slice(j, i).trim();
             let d = degree(tmp);
             lookUp(head, tmp, d);
-            // str[`x${d}`].push(tmp);
-            // str.degree = d > str.degree ? d : str.degree;
-            // console.log(tmp,'|', i, j, `D = ${d}`);
             j = i;
         }
 
