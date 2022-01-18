@@ -37,9 +37,12 @@ function lookUp(head, data, d){
 }
 
 
+// extract Xˆe from string
+const regex1 = /X[\^]?[0-3]{0,}/gi;
+// check Xˆe format
+const regex2 = /^X[\^][0-3]{1}$|^X$/i;
 
-
-const checkSyntax = (regex1, regex2, arr) => {
+const checkSyntax = (arr) => {
 
     const matches = arr.match(regex1);
     // console.log (matches);

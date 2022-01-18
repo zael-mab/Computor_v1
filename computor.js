@@ -27,7 +27,9 @@ let struct = {
     },
 };
 
-///////////////////////////
+
+
+///////////////////////////////////////////
 function Node(data, degree, next){
     this.data = [];
     this.data.push(data);
@@ -55,7 +57,22 @@ function add(head, data, d){
 
 let headNode = new Node (null, -1, null);
 new head(head);
-///////////////////////
+const cont = function(head){
+    // console.log(head);
+    let temp = head.next;
+    while (temp){
+        console.log(temp.data);
+        temp = temp.next;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////
+
+
+
+
+//  /////////////////////////////////////////////////////////
 
 // check if the arguments
 var arr = [];
@@ -91,10 +108,7 @@ if (!f[0].replace(/\s/g, '') && (!(f[1].replace(/\s/g, ''))) ){
 
 /////////////////// match
 
-// extract Xˆe from string
-const regex1 = /X[\^]?[0-3]{0,}/gi;
-// check Xˆe format
-const regex2 = /^X[\^][0-3]{1}$|^X$/i;
+
 // check sting 
 const regex3 = /^[^a-wy-z<>%@#&!_,]+$/ig;
 
@@ -105,8 +119,9 @@ if (arr[0].match(regex3) === null) {
 
 const parse = require('./parse');
 
+
 //
-parse.checkSyntax(regex1, regex2, arr[0]);
+parse.checkSyntax(arr[0]);
 
 const correctSign = (str) => {
     // check for multiple minus signs and reduce the form.
@@ -123,7 +138,11 @@ const correctSign = (str) => {
 struct.firstArray.arr = correctSign(struct.firstArray.arr);
 struct.secondArray.arr = correctSign(struct.secondArray.arr);
 
-/////
+////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////
 const rev = (str) => {
     if (!str.match(/^[\-\+]/)) {
         str = '+'.concat(str);
@@ -134,7 +153,9 @@ const rev = (str) => {
     str = str.replace(/[\!]/g, '+');
     return str;
 }
+///////////////////////////////////
 
+///////////////////////////////////////////////////////////////////
 struct.secondArray.arr = rev(struct.secondArray.arr);
 
 struct.firstArray.arr = struct.firstArray.arr.replace(/\s/g, '');;
@@ -144,16 +165,43 @@ struct.secondArray.arr = struct.secondArray.arr.replace(/\s/g, '');;
 //     process.exit (1);
 // }
 
-
 struct.firstArray = parse.setData(struct.firstArray, headNode);
 struct.secondArray = parse.setData(struct.secondArray, headNode);
+
+const reduce = require('./produce');
+
+const toto = (head) => {
+    let string = '';
+    let temp = head.next;
+    while (temp){
+        const holder = [];
+        holder.push(reduce.reduceForm(temp.data, temp.degree));
+    
+        if (holder[0].form != '0'){
+            if (temp.degree > 1)
+                string = `${string} + ${holder[0].mult} * X^${temp.degree}`;
+            else if (temp.degree == 1)
+                string = `${string} + ${holder[0].mult} * X`;
+            else
+                string = `${string} + ${holder[0].form}`;
+        }
+     
+        temp.data = holder;
+        temp = temp.next;
+    }
+    string = correctSign(string) + ' = 0';
+    return string;
+}
+
+const reString = toto(headNode);
+console.log(`reSting : ${reString}`);
+cont(headNode);
 
 //////////
 console.log(struct);
 /////////
 
 /////////////////////////////
-const reduce = require('./produce');
 
 struct.firstArray.x0 = reduce.reduceForm(struct.firstArray.x0, 0).form;
 struct.firstArray.x1 = reduce.reduceForm(struct.firstArray.x1, 1).form;
@@ -199,6 +247,9 @@ if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0){
     struct.reducedForm = correctSign(struct.reducedForm);
 }
 // console.log(newForm);
+
+
+
 
 // //*******************Console***********************//
 console.log('Reduced form: ' + struct.reducedForm);
@@ -265,15 +316,4 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
 // node0 = new head(node0);
 
 
-const cont = function(head){
-    // console.log(head);
-    let temp = head;
-    while (temp){
-        console.log(temp);
-        temp = temp.next;
-    }
-}
-
-
-cont(headNode);
 
