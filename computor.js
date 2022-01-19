@@ -14,8 +14,6 @@ let struct = {
     },
 };
 
-
-
 ///////////////////////////////////////////
 function Node(data, degree, next){
     this.data = [];
@@ -169,20 +167,21 @@ const setNewForm = (head) => {
     
         if (holder[0].form != '0'){
             head.degree = head.degree > temp.degree ? head.degree : temp.degree;
-            if (temp.degree > 1){
-                string = `${string} + ${holder[0].mult} * X^${temp.degree}`;
-                if (temp.degree == 2){
-                    newForm.x2 = holder[0].mult;
-                }
+        }
+
+        if (temp.degree > 1){
+            string = holder[0].form != '0' ? `${string} + ${holder[0].mult} * X^${temp.degree}` : string;
+            if (temp.degree == 2){
+                newForm.x2 = holder[0].mult;
             }
-            else if (temp.degree == 1){
-                string = `${string} + ${holder[0].mult} * X`;
-                newForm.x1 = holder[0].mult;
-            }
-            else{
-                string = `${string} + ${holder[0].form}`;
-                newForm.x0 = holder[0].form;
-            }
+        }
+        else if (temp.degree == 1){
+            string = holder[0].form != '0' ? `${string} + ${holder[0].mult} * X` : string;
+            newForm.x1 = holder[0].mult;
+        }
+        else{
+            string = holder[0].form != '0' ? `${string} + ${holder[0].form}` : string;
+            newForm.x0 = holder[0].form;
         }
      
         temp.data = holder;
@@ -196,7 +195,6 @@ const setNewForm = (head) => {
 }
 
 const reString = setNewForm(headNode);
-
 
 
 
@@ -223,8 +221,6 @@ let solutions = {
 };
 
 
-
-// solutions.delta = reduce.sqrRoot(solutions.delta);
 if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)){
     console.log (`There is no solution for this equation { Ø empty set } .`);
     process.exit(1);
