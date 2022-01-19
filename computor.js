@@ -144,10 +144,7 @@ struct.secondArray.arr = rev(struct.secondArray.arr);
 
 struct.firstArray.arr = struct.firstArray.arr.replace(/\s/g, '');;
 struct.secondArray.arr = struct.secondArray.arr.replace(/\s/g, '');;
-// if (!struct.firstArray.arr || !struct.secondArray.arr){
-//     console.log ('Error');
-//     process.exit (1);
-// }
+
 
 struct.firstArray = parse.setData(struct.firstArray, headNode);
 struct.secondArray = parse.setData(struct.secondArray, headNode);
@@ -191,8 +188,10 @@ const setNewForm = (head) => {
         temp.data = holder;
         temp = temp.next;
     }
-    
-    string = correctSign(string) + ' = 0';
+    if (string)
+        string = correctSign(string) + ' = 0';
+    else
+        string = '0 = 0';
     return string;
 }
 

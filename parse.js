@@ -44,14 +44,11 @@ const regex2 = /^X[\^][0-9]{1}$|^X$/i;
 const checkSyntax = (arr) => {
 
     const matches = arr.match(regex1);
-    // console.log (matches);
     if (matches != null) {
         matches.forEach(element => {
-            // console.log(`element => ${element}`);
             const check = element.match(regex2);
-
             if (check === null) {
-                console.log(`syntax Error [${element}] | ${arr}\nI can't solve that`);
+                console.log(`Error, I can't solve that`);
                 process.exit(1);
             }
         });
@@ -72,16 +69,13 @@ const setData = (str, head) => {
 
     for (let i = 0; i <= str.arr.length; i++) {
 
-        // ///////////////
         parentheses = str.arr[i] === '(' ? parentheses + 1 : parentheses;
         parentheses = str.arr[i] === ')' ? parentheses - 1 : parentheses;
 
-        // ///////////////
         if ((str.arr[i] === 'X' || str.arr[i] === 'x') && str.arr[i + 1] === '^') {
             if (str.arr[i + 2] === '0') {
                 str.arr = str.arr.replace(/X\^0/gi, 1);
             }
-            //
             if (str.arr[i + 2] === '1') {
                 str.arr = str.arr.replace(/X\^1/gi, 'X');
             }

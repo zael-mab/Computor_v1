@@ -19,9 +19,10 @@ const operat = (cal, holder, j) => {
         cal.y = (cal.y === undefined && cal.x) ? parseFloat(holder.slice(j, )) : cal.y;
         cal.x = (cal.x) ? cal.x : parseFloat(holder.slice(j, ));
         cal.index = 1;
-        // console.log('x=' + cal.x + ' ' + 'y=' + cal.y + ' | ' + holder.slice(j, ));
+
     }
     if (cal.x && cal.y) {
+
         let factor = 1;
         factor = cal.xSign === '-' ? -1 : 1;
         cal.x = parse.calculate(cal.x, factor, '*');
@@ -86,7 +87,6 @@ const reduceForm = (arr, degree) => {
         if (degree > 0) {
             holder = holder.replace(/[X][\^]{0,1}[0-9]{0,1}/ig, '1');
         }
-        // if (!holder.match(/[*]{0,1}[0][*]{0,1}/g)){
             for (let j = 0; j < holder.length; j++) {
                 cal = operat(cal, holder, j);
             }
@@ -97,9 +97,7 @@ const reduceForm = (arr, degree) => {
                 cal.xSign = undefined;
                 cal.x = undefined;
             }
-            // console.log ('holder' + holder, cal.total, total);
             total += cal.total;
-        // }
 
     });
     
@@ -122,31 +120,15 @@ const reduceForm = (arr, degree) => {
 }
 
 
-
 const sqrRoot = (nb) =>{
-    let sqr = nb /2;
+    let sqr = nb / 2;
     let tmp = 0;
     while (tmp != sqr){
         tmp = sqr;
-        // console.log (tmp);
         sqr = (nb / tmp + tmp )/2;
-        // console.log (sqr);
     }
     return sqr;
 };
-
-// const sqrRoot = (nb) =>{
-//     let sqrt = 1;
-//     let i = 0;
-//     while (true){
-//         sqrt = (nb / sqrt + sqrt) /2;
-//         i++;
-//         if (i == nb/2 + 1 || (sqrt * sqrt) == nb)
-//             break ;
-//     }
-//     return sqrt;
-// };
-
 
 
 module.exports = { reduceForm , sqrRoot};
