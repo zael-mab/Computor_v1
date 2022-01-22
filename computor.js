@@ -1,46 +1,88 @@
-// get the equation
-// get two sidece by spliting with '='
-// simplify the two strings (reduced form)
+// get the equation *
+// get two sidece by spliting with '=' *
+// simplify the two strings (reduced form) *
 // get the b , a and c then calculate Delta = b^2 - 4ac
 // solve quation S={( -b+√Delta / 2a ); (-b-√Delta / 2a)}
 
 // set a structure
-
-//    /^X[\^]?[0-2]{1}$|^X$/
-//    /X[\^]?[0-2]{0,}/
-
-
-const struct = {
+let struct = {
     firstArray: {
-        degree: 0,
-        arr: '',
-        par: [],
-        x0: [],
-        x1: [],
-        x2: []
+        arr: ''
     },
     secondArray: {
-        degree: 0,
-        arr: '',
-        par: [],
-        x0: [],
-        x1: [],
-        x2: []
-    }
+        arr: ''
+    },
+};
+
+///////////////////////////////////////////
+function Node(data, degree, next) {
+    this.data = [];
+    this.data.push(data);
+    this.degree = degree;
+    this.next = next;
+};
+
+function head(head) {
+    this.head = head;
 };
 
 
-// check if the arguments
-var arr = [];
+function add(head, data, d) {
+    let node = new Node(data, d, null);
+    if (!head.next) {
+        head.next = node;
+    } else {
+        let tmp = head.next;
+        while (tmp.next) {
+            tmp = tmp.next;
+        }
+        tmp.next = node;
+    }
+}
+
+let headNode = new Node(null, -1, null);
+new head(head);
+
+const cont = function(head) {
+    let temp = head.next;
+    while (temp) {
+        console.log(temp.data);
+        temp = temp.next;
+    }
+}
+
+////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////
+const rev = (str) => {
+        if (!str.match(/^[\-\+]/)) {
+            str = '+'.concat(str);
+        }
+        str = str.replace(/[\+]/g, '$');
+        str = str.replace(/[\-]/g, '!');
+        str = str.replace(/[\$]/g, '-');
+        str = str.replace(/[\!]/g, '+');
+        return str;
+    }
+    ///////////////////////////////////
+let argv = process.argv[2];
+//  /////////////////////////////////////////////////////////
+
+// check arguments
 if (process.argv.length > 3) {
     console.log(`Error to many args...`);
     process.exit(1);
 } else if (process.argv.length == 2) {
     console.log('Error, please add an argument');
     process.exit(1);
+} else if (process.argv[2].trim().length === 0) {
+    console.log('Error, string empty');
+    process.exit(1);
 }
 
 
+var arr = [];
 //////////// get the equation from the argument
 for (let i = 2; i < process.argv.length; i++) {
     arr.push(process.argv[i]);
@@ -49,7 +91,6 @@ for (let i = 2; i < process.argv.length; i++) {
 
 ///////////////// splite the equation
 const f = arr[0].split('=');
-
 if (f.length == 2) {
     struct.firstArray.arr = f[0].trim();
     struct.secondArray.arr = f[1].trim();
@@ -58,12 +99,11 @@ if (f.length == 2) {
     struct.secondArray.arr = '0';
 }
 
-/////////////////// match
+if (!f[0].replace(/\s/g, '') && (!(f[1].replace(/\s/g, '')))) {
+    console.log('Syntax Error');
+    process.exit(1);
+}
 
-// extract Xˆe from string
-const regex1 = /X[\^]?[0-2]{0,}/gi;
-// check Xˆe format
-const regex2 = /^X[\^][0-2]{1}$|^X$/i;
 // check sting 
 const regex3 = /^[^a-wy-z<>%@#&!_,]+$/ig;
 
@@ -74,175 +114,145 @@ if (arr[0].match(regex3) === null) {
 
 const parse = require('./parse');
 
-// 
-parse.checkSyntax(regex1, regex2, arr[0]);
 
-struct.firstArray = parse.setData(struct.firstArray);
-struct.secondArray = parse.setData(struct.secondArray);
+parse.checkSyntax(arr[0]);
 
-// struct.firstArray.arr =
-console.log(struct);
-
-// +-n*/m+-
-const reg = /[\+\-]{0,1}\s{0,}[0-9]{1,}\s{0,}[\*\/]\s{0,}[0-9]{1,}/;
-// +-n-+
-const regg = /[\+\-]{1}[0-9]{1,}[\+\-]{0,}(?![\/\*])|^[0-9]{1,}[\+\-]{1}|(?![\/\*])[0-9]{1,}$/;
-
-// (+-X/*Y)
-// [^\^\/\*][\+-]{0}[0-9]{1,}[\/\*]{1}[0-9]{1,}
-// +-X+-Y-+
-// [\+\-]{1}[0-9]{1,}[\+\-]{1,}(?![\/\*])[0-9]{1,}[\+\-]{1}|[\+\-]{1}[0-9]{1,}[\+\-]{1,}(?![\/\*])[0-9]{1,}$|^[\+\-]{0,}[0-9]{1,}[\+\-]{1,}(?![\/\*])[0-9]{1,}[\+\-]{1}
-// 
-
-
-
-
-
-
-const operat = (cal, holder, j) => {
-    // looking for the sign
-    if (holder[j].match(/[\+\-]/)) {
-        cal.index = 0;
-        cal.ySign = (cal.ySign === undefined && cal.x) ? holder[j] : cal.ySign;
-        cal.xSign = (!cal.x && !cal.y) ? holder[j] : cal.xSign;
+const correctSign = (str) => {
+    // check for multiple minus signs and reduce the form.
+    if (str.match(/(\-\s{0,}\-|\-\-)/g)) {
+        str = str.replace(/(\-\s{0,}\-|\-\-)/g, '+');
     }
-
-    // Looking for the operation
-    if (holder[j].match(/([\*\/])/)) {
-        cal.index = 0;
-        cal.oper = holder[j];
+    // check for multiple minus and plus signs and reduce the form.
+    if (str.match(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g)) {
+        str = str.replace(/(\+\s{0,}\-|\+\-)|(\-\s{0,}\+|\-\+)/g, '-');
     }
-    // Looking for a Number
+    return str
+}
 
-    if (holder[j].match(/[0-9]/) && cal.index == 0) {
-        cal.y = (cal.y === undefined && cal.x) ? parseFloat(holder.slice(j, )) : cal.y;
-        cal.x = (cal.x) ? cal.x : parseFloat(holder.slice(j, ));
-        cal.index = 1;
+struct.firstArray.arr = correctSign(struct.firstArray.arr);
+struct.secondArray.arr = correctSign(struct.secondArray.arr);
 
-        // console.log('x=' + cal.x + ' ' + 'y=' + cal.y + ' | ' + holder.slice(j, ));
-    }
-    if (cal.x && cal.y) {
-        let factor = 1;
-        factor = cal.xSign === '-' ? -1 : 1;
-        cal.x = calculate(cal.x, factor, '*');
-        factor = cal.ySign === '-' ? -1 : 1;
-        cal.y = calculate(cal.y, factor, '*');
-        if (cal.oper != undefined) {
-            cal.total += calculate(cal.x, cal.y, cal.oper);
-            cal = init(cal);
+////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////
+struct.secondArray.arr = rev(struct.secondArray.arr);
+
+struct.firstArray.arr = struct.firstArray.arr.replace(/\s/g, '');;
+struct.secondArray.arr = struct.secondArray.arr.replace(/\s/g, '');;
+
+
+struct.firstArray = parse.setData(struct.firstArray, headNode);
+struct.secondArray = parse.setData(struct.secondArray, headNode);
+
+const reduce = require('./produce');
+
+//////////////////
+
+let newForm = {
+    x0: [],
+    x1: [],
+    x2: []
+};
+
+const setNewForm = (head) => {
+    let string = '';
+    let temp = head.next;
+
+    while (temp) {
+        const holder = [];
+        holder.push(reduce.reduceForm(temp.data, temp.degree));
+
+        if (holder[0].form != '0') {
+            head.degree = head.degree > temp.degree ? head.degree : temp.degree;
+        }
+
+        if (temp.degree > 1) {
+            string = holder[0].form != '0' ? `${string} + ${holder[0].mult} * X^${temp.degree}` : string;
+            if (temp.degree == 2) {
+                newForm.x2 = holder[0].mult;
+            }
+        } else if (temp.degree == 1) {
+            string = holder[0].form != '0' ? `${string} + ${holder[0].mult} * X` : string;
+            newForm.x1 = holder[0].mult;
         } else {
-            cal.total += calculate(cal.x, cal.y, '+');
-            cal.x = undefined;
-            cal.y = undefined;
+            string = holder[0].form != '0' ? `${string} + ${holder[0].form}` : string;
+            newForm.x0 = holder[0].form;
         }
+
+        temp.data = holder;
+        temp = temp.next;
     }
-    if (cal.x && cal.oper && cal.total != 0) {
-        cal.x = calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-        var t = cal.total;
-        cal.total = calculate(cal.total, cal.x, cal.oper);
-        cal.oper = undefined;
-        cal.x = undefined;
-        cal.xSign = undefined;
-    }
-    return cal;
+    if (string)
+        string = correctSign(string) + ' = 0';
+    else
+        string = '0 = 0';
+    return string;
 }
 
+const reString = setNewForm(headNode);
 
 
 
-const init = (cal) => {
-    cal.x = undefined;
-    cal.y = undefined;
-    cal.xSign = undefined;
-    cal.ySign = undefined;
-    cal.oper = undefined;
-    return cal;
+// //*******************Console***********************//
+console.log('Reduced form: ' + reString);
+console.log(`Polynomial degree: ${headNode.degree}`);
+if (headNode.degree > 2) {
+    console.log('I can\'t solve this equation !');
+    process.exit(1);
 }
+// //******************************************//
 
+// Solutions
+let tmp = [];
+tmp.push(`${newForm.x1}*${newForm.x1}`, `-4*${newForm.x2}*${newForm.x0}`);
 
-
-//  //////////////
-const produceForm = (arr, degree) => {
-    let holder;
-    let cal = {
-        index: 0,
-        x: undefined,
-        xSign: undefined,
-        oper: undefined,
-        y: undefined,
-        ySign: undefined,
-        total: 0
-    };
-    let total = 0;
-
-    arr.forEach(element => {
-        holder = element.slice().replace(/\s/g, '');
-        const numbers = holder.match(/[0-9]{1,}/g);
-        const s = holder.match(/\*\s{0,}\/|\/\s{0,}\*/g);
-
-        cal.index = 0;
-        cal.x = undefined;
-        cal.y = undefined;
-        cal.xSign = undefined;
-        cal.ySign = undefined;
-        cal.total = 0;
-
-        if (degree > 0) {
-            const match = holder.match(/[X][\^]{0,1}[0-2]{0,1}/g);
-            holder = holder.replace(match, '1');
-        }
-
-
-        for (let j = 0; j < holder.length; j++) {
-            cal = operat(cal, holder, j);
-        }
-
-        if (cal.x && !cal.y && !cal.oper) {
-            cal.x = calculate(cal.x, (cal.xSign === '-' ? -1 : 1), '*');
-            cal.total += cal.x;
-            cal.xSign = undefined;
-            cal.x = undefined;
-        }
-        total += cal.total;
-    });
-    let res;
-    if (degree == 1) {
-        res = total != 0 ? total.toString() + `*X^${degree}` : '0';
-    } else if (degree == 2) {
-        res = total != 0 ? total.toString() + `*X^${degree}` : '0';
-    } else {
-        res = total.toString();
-    }
-    return (res);
-}
-
-
-
-const calculate = (x, y, sign) => {
-    if (!x | !y) {
-        console.log('E');
-        process.exit(1);
-    }
-    if ((x === 0 || y === 0) && sign === '/') {
-        console.log('Error devision by 0');
-        process.exit(1);
-    }
-    switch (sign) {
-        case '+':
-            return x + y;
-        case '/':
-            return x / y;
-        case '-':
-            return x - y;
-        case '*':
-            return x * y;
-    }
+let solutions = {
+    a: parseFloat(newForm.x2),
+    b: parseFloat(newForm.x1),
+    c: parseFloat(newForm.x0),
+    delta: parseFloat(reduce.reduceForm(tmp, 0).form),
+    s1: undefined,
+    s2: undefined
 };
 
 
+if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)) {
+    console.log(`There is no solution for this equation { Ø empty set } .`);
+    process.exit(1);
+} else if (newForm.x0 == 0 && newForm.x1 == 0 && newForm.x2 == 0) {
+    console.log(`There are infinite solutions for this equation ∞.`);
+    process.exit(1);
+} else if (newForm.x1 != 0 && newForm.x2 == 0 && newForm.x0 == 0) {
+    console.log('The solution is:\n0');
 
 
-struct.firstArray.x0 = produceForm(struct.firstArray.x0, 0);
-struct.firstArray.x1 = produceForm(struct.firstArray.x1, 1);
-struct.firstArray.x2 = produceForm(struct.firstArray.x2, 2);
-console.log(struct);
+} else if (newForm.x1 != 0 && newForm.x0 != 0 && newForm.x2 == 0) {
+
+    let tmp = [];
+    tmp.push(newForm.x0.concat('/-' + newForm.x1));
+    tmp[0] = correctSign(tmp[0]);
+    console.log(`The solution is:\n${tmp[0]} = ${reduce.reduceForm(tmp).form}`);
+
+} else if (newForm.x2 != 0) {
+
+    if (solutions.delta > 0) {
+        solutions.s1 = (-solutions.b + reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
+        solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
+        console.log(`Discriminant is strictly positive, the two solutions are :\nS1 :${solutions.s1}\nS2 :${solutions.s2}`);
+
+    } else if (solutions.delta === 0) {
+        solutions.s2 = (-solutions.b - reduce.sqrRoot(solutions.delta)) / (2 * solutions.a);
+        console.log(`Discriminant = 0\nS :${solutions.s2}`);
+
+    } else if (solutions.delta < 0) {
+        console.log('complex solutions');
+        const d = reduce.sqrRoot(-solutions.delta) / (2 * solutions.a);
+        const x = -solutions.b / (2 * solutions.a);
+        console.log(`${x} + ${d}i`);
+        console.log(`${x} - ${d}i`);
+    }
+
+}
