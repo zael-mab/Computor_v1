@@ -2,7 +2,7 @@
 // get two sidece by spliting with '=' *
 // simplify the two strings (reduced form) *
 // get the b , a and c then calculate Delta = b^2 - 4ac
-// solve quation S={( -b+√Delta / 2a ); (-b-√Delta / 2a)}
+// solve equation S={( -b+√Delta / 2a ); (-b-√Delta / 2a)}
 
 // set a structure
 let struct = {
@@ -159,6 +159,7 @@ let newForm = {
 
 const setNewForm = (head) => {
     let string = '';
+    head.degree = 0;
     let temp = head.next;
 
     while (temp) {
@@ -170,15 +171,15 @@ const setNewForm = (head) => {
         }
 
         if (temp.degree > 1) {
-            string = holder[0].form != '0' ? `${string} + ${holder[0].mult} * X^${temp.degree}` : string;
+            string = holder[0].form != '0' ? (!string ? `${holder[0].mult} * X^${temp.degree}` : `${string} + ${holder[0].mult} * X^${temp.degree}`) : string;
             if (temp.degree == 2) {
                 newForm.x2 = holder[0].mult;
             }
         } else if (temp.degree == 1) {
-            string = holder[0].form != '0' ? `${string} + ${holder[0].mult} * X` : string;
+            string = holder[0].form != '0' ? (!string ? `${holder[0].mult} * X` : `${string} + ${holder[0].mult} * X`) : string;
             newForm.x1 = holder[0].mult;
         } else {
-            string = holder[0].form != '0' ? `${string} + ${holder[0].form}` : string;
+            string = holder[0].form != '0' ? (!string ? `${holder[0].form}` : `${string} + ${holder[0].form}`) : string;
             newForm.x0 = holder[0].form;
         }
 
