@@ -252,8 +252,8 @@ if (newForm.x0 != 0 && (newForm.x1 == 0 && newForm.x2 == 0)) {
         console.log('complex solutions');
         const d = reduce.sqrRoot(-solutions.delta) / (2 * solutions.a);
         const x = -solutions.b / (2 * solutions.a);
-        console.log(`${x} + ${d}i`);
-        console.log(`${x} - ${d}i`);
+        console.log(`${x} + i * ${d}`);
+        console.log(`${x} - i * ${d}`);
     }
 
 }
