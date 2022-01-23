@@ -1,4 +1,4 @@
-# Computor_-v1
+# Computor_V1
 solving polynomial equation of degree less than or equal to 2.
 
 Basic format:
